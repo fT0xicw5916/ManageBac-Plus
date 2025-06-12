@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ManageBac Plus | Tasks</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+        <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    </head>
+    <body class="is-preload">
+
+        <div id="wrapper">
+
+            <h5><a href="/">Home</a></h5>
+            <br>
+
+            <h2><a href="/grades">Tasks</a></h2>
+            <br>
+
+            <h1><strong>Simulate a new task</strong></h1>
+            <br>
+
+            <div>
+                <form method="POST">
+                    <select name="category">
+                        {% for c in categories %}
+                        <option value="{{ c }}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <input placeholder="  New task score to simulate..." style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" type="number" name="new_raw_score" required min='0'>
+                    <br>
+                    <br>
+                    <input placeholder="  Max score for new task to simulate..." style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" type="number" name="new_max_score" required min="0">
+                    <br>
+                    <br>
+                    <button type="submit">Simulate</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div id="bg"></div>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    </body>
+</html>
+

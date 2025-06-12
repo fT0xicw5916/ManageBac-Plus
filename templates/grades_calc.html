@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ManageBac Plus | Grades Calculator</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+        <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    </head>
+    <body class="is-preload">
+
+        <div id="wrapper">
+
+            <h5><a href="/">Home</a></h5>
+            <br>
+
+            <h2><a href="/grades">Grades Calculator</a></h2>
+            <br>
+
+            <p>In order to get an overall score of {{ target }} in {{ subject }}, you need to score at least:</p>
+            <h1 style="font-size: 100px;">{{ result }}</h1>
+            <p>in your {% if term == "mid" %}mid-term{% else %}final{% endif %}.</p>
+            <br>
+
+            <div id="calculator" style="width: 800px; height: 600px;"></div>
+
+        </div>
+
+        <div id="bg"></div>
+
+        <script src="https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script>
+        var elt = document.getElementById("calculator");
+        var calculator = Desmos.GraphingCalculator(elt);
+
+        calculator.setMathBounds({
+            left: -5,
+            right: 105,
+            bottom: -5,
+            top: 105
+        });
+        calculator.updateSettings({ lockViewport: true, zoomButtons: false, xAxisLabel: "Target", yAxisLabel: "Result", expressionsCollapsed: true });
+
+        calculator.setExpression({ id: "fx", latex: "f(x)=(x(a+b)-ac)/(b) \\left\\{0\\le x\\le 100\\right\\}" });
+
+        {% if term == "mid" %}
+
+        calculator.setExpression({ id: "a", latex: "a=0.5", sliderBounds: { min: 0, max: 1, step: 0.01 } });
+        calculator.setExpression({ id: "b", latex: "b=0.2", sliderBounds: { min: 0, max: 1, step: 0.01 } });
+
+        {% else %}
+
+        calculator.setExpression({ id: "a", latex: "a=0.7", sliderBounds: { min: 0, max: 1, step: 0.01 } });
+        calculator.setExpression({ id: "b", latex: "b=0.3", sliderBounds: { min: 0, max: 1, step: 0.01 } });
+
+        {% endif %}
+
+        calculator.setExpression({ id: "c", latex: "c={{ overall }}", sliderBounds: { min: 0, max: 100, step: 0.01 } });
+
+        calculator.setExpression({ id: "t", latex: "t={{ target }}", sliderBounds: { min: 0, max: 100, step: 0.01 } });
+        calculator.setExpression({ id: "x", latex: "x=t", color: Desmos.Colors.BLACK });
+
+        calculator.setExpression({ id: "y", latex: "y=f(t)", color: Desmos.Colors.BLACK });
+
+        calculator.setExpression({ id: "point", latex: "(t, f(t))", color: Desmos.Colors.BLUE, label: "", showLabel: true });
+        </script>
+    </body>
+</html>
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ManageBac Plus | Grades</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+        <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    </head>
+    <body class="is-preload">
+
+        <div id="wrapper">
+
+            <h5><a href="/">Home</a></h5>
+            <br>
+
+            <h1 style="font-size: 70px;">Grades</h1>
+            <strong><a href="#grade_calc">Calculator</a></strong>
+            <br>
+
+            <div class="subjects">
+
+                {% for grade in grades %}
+
+                <div class="subject">
+                    <h3><u>{{ grade["class_name"] }}</u></h3>
+                    {% for term in grade["grades"] %}
+                    {% if term[0] == "Overall" %}
+                    <b style="font-size: 20px;">{{ term[0] }}: {{ term[1] }}</b>
+                    <br>
+                    <br>
+                    {% else %}
+                    <p>{{ term[0] }}: {{ term[1] }}</p>
+                    {% endif %}
+                    {% endfor %}
+                    <button><a href="/tasks?subject={{ grade['class_name'] }}">Tasks</a></button>
+                </div>
+
+                {% endfor %}
+
+            </div>
+            <br>
+            <br>
+
+            <h1 id="grade_calc">Grade Calculator</h1>
+
+            <div>
+                <form method="POST">
+                    <select name="subject">
+                        {% for grade in grades %}
+                        <option value="{{ grade['class_name'] }}">{{ grade["class_name"] }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <input placeholder="  Target overall score..." style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" type="number" name="target" required min='0' max="100" step="0.01">
+                    <br>
+                    <br>
+                    <select name="term">
+                        <option value="mid">Mid-term</option>
+                        <option value="final">Final</option>
+                    </select>
+                    <br>
+                    <button type="submit">Calculate</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div id="bg"></div>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>
+

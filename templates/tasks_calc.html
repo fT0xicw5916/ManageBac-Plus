@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ManageBac Plus | Tasks Calculator</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+        <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    </head>
+    <body class="is-preload">
+
+        <div id="wrapper">
+
+            <h5><a href="/">Home</a></h5>
+            <br>
+
+            <h2><a href="/tasks?subject={{ origin }}">Tasks Calculator</a></h2>
+            <br>
+
+            <p>With an additional {{ category }} ({{ new_raw_score }}/{{ new_max_score }}) in {{ origin }}, your overall is now:</p>
+            <h1 style="font-size: 100px;">{{ new_overall }} ({{ delta_overall }})</h1>
+            <p style="font-size: 20px;">with your {{ category }} becoming {{ new_local_avg }} ({{ delta_local }}).</p>
+            <br>
+
+        </div>
+
+        <div id="bg"></div>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>
+
