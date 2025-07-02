@@ -29,6 +29,14 @@ class Scores:
         self.cur.execute(f"SELECT * FROM `{c}` WHERE id = {id};")
         return self.cur.fetchall()
 
+    def get_category_score(self, id, class_name):
+        scores = self.search_score(id, class_name)[0]
+        categories = [i[0] for i in self.get_weight_names(class_name)]
+        results = {}
+        for i, c in enumerate(categories):
+            results[c] = scores[i]
+        return results
+
     def get_weight_names(self, c):
         self.cur.execute(f"SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = \"scores\" AND table_name = \"{c}\";")
         return self.cur.fetchall()

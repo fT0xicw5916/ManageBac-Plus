@@ -7,13 +7,14 @@ from functionals.grades import new_task_predict
 app = Flask(__name__)
 
 
-@app.route("/cards")
-def cards():
-    username = request.cookies.get("username")
-    password = request.cookies.get("password")
-    if username is None or password is None:
-        return redirect(url_for("settings", next="cards"))
-    return render_template("cards_index.html")
+@app.route("/projects")
+def projects():
+    return render_template("projects.html")
+
+
+@app.route("/toolbox/<sub>")
+def toolbox_sub(sub):
+    return render_template("toolbox.html")
 
 
 @app.route("/tasks", methods=["POST", "GET"])
@@ -22,23 +23,45 @@ def tasks():
     if subject is None:
         return None
 
+    # Since /tasks is redirected from /grades, we can assume the grades data is cached
     if request.method == "GET":
-        driver = ManagebacDriver(request.cookies.get("username"), request.cookies.get("password"))
-        categories = driver.get_categories(subject)
-        return render_template("tasks.html", categories=categories)
+        scores = Scores()
+        categories = [i[0] for i in scores.get_weight_names(subject)]
+        return render_template("tasks.html", categories=categories[2:])
 
     elif request.method == "POST":
-        driver = ManagebacDriver(request.cookies.get("username"), request.cookies.get("password"))
+        credentials = Credentials()
+        username = request.cookies.get("username")
+        password = request.cookies.get("password")
+        driver = ManagebacDriver(username, password)
 
+        id = credentials.search(username)[-1][0]
         category = request.form.get("category")
         new_raw_score = int(request.form.get("new_raw_score"))
         new_max_score = int(request.form.get("new_max_score"))
-        current_overall = driver.get_overall(subject)
-        task_num = int(driver.get_task_num(subject, category))
-        local_avg = driver.get_category_score(subject, category)
+        scores = Scores()
+        current_overall = scores.search_score(id, subject)[-1][1]
+        task_num = driver.get_task_num(subject, category)
+        local_avg = scores.get_category_score(id, subject)[category]
 
         grades_dict = {}
-        g = driver.get_grades()
+
+        g = []
+        data = credentials.search(username)[-1]
+        for class_ in data[3:]:
+            s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[-1][1:]]
+            n = [i[0] for i in scores.get_weight_names(class_)[1:]]
+            w = []
+            for i in n:
+                if i == "Overall":
+                    w.append(None)
+                    continue
+                w.append(int(i[i.find('(') + 1:i.find('%')]))
+            g.append({
+                "class_name": class_,
+                "grades": list(zip(n, s, w))
+            })
+
         for s in g:
             if s["class_name"] == subject:
                 for c in s["grades"]:
@@ -92,10 +115,10 @@ def grades():
         g = []
 
         if len(credentials.search(username)) > 0:  # Data cached
-            data = credentials.search(username)[0]
+            data = credentials.search(username)[-1]
             id = data[0]
             for class_ in data[3:]:
-                s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[0][1:]]
+                s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[-1][1:]]
                 n = [i[0] for i in scores.get_weight_names(class_)[1:]]
                 w = []
                 for i in n:
@@ -125,7 +148,7 @@ def grades():
             credentials.new(username, password, classes)
 
             # New score entry
-            id = credentials.search(username)[0][0]
+            id = credentials.search(username)[-1][0]
             for i in g:
                 s = []
                 for k in i["grades"]:

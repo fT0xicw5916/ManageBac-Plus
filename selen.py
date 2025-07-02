@@ -72,31 +72,6 @@ class ManagebacDriver:
         overall = self.driver.find_element(By.XPATH, "/html/body/div/div[2]/aside/div/section[3]/div/div[2]/div[2]").get_attribute("innerHTML")
         return float(overall[overall.find('(')+1:overall.find('%')])
 
-    def get_categories(self, subject):
-        self.driver.get("https://huijia.managebac.cn/student")
-
-        unfiltered_li_classes = self.driver.find_elements(By.XPATH, "/html/body/div/div[1]/ul/li[3]/ul/*")[:-1]
-        name_and_url = None
-        for unfiltered_li_class in unfiltered_li_classes:
-            unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
-            unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
-
-            if unfiltered_text == subject:
-                name_and_url = (unfiltered_text, unfiltered_link.get_attribute("href"))
-                break
-
-        if name_and_url is None:
-            return "Subject not found"
-
-        self.driver.get(name_and_url[1] + "/units")
-        categories_divs = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/aside/div/section[3]/div/*")[2:]
-
-        categories = []
-        for div in categories_divs:
-            categories.append(div.find_element(By.XPATH, "div[1]/div").get_attribute("innerHTML"))
-
-        return categories
-
     def get_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
 
@@ -153,13 +128,13 @@ class ManagebacDriver:
                 count += 1
 
                 self.driver.get(url + "/units")
-                div_grades = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/aside/div/section[3]/div/*")[1:]
+                div_grades = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/aside/div/section[2]/div/*")[1:]
 
                 for i, div_grade in enumerate(div_grades):
-                    if i:
-                        name_with_prop = div_grade.find_element(By.XPATH, "div[1]/div").get_attribute("innerHTML")  # Not overall
-                    else:
+                    if i == 0:
                         name_with_prop = div_grade.find_element(By.XPATH, "div[1]/strong").get_attribute("innerHTML")  # Overall
+                    else:
+                        name_with_prop = div_grade.find_element(By.XPATH, "div[1]/div").get_attribute("innerHTML")  # Not overall
                     text_grade = div_grade.find_element(By.XPATH, "div[2]").get_attribute("innerHTML")
 
                     prop = int(name_with_prop[name_with_prop.find('(')+1:name_with_prop.find('%')]) / 100 if i else None
