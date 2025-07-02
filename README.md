@@ -26,7 +26,14 @@ Just a simple python Flask webapp built around ManageBac that adds a lot of usef
 ### Prerequisites
 Before launching the app, make sure you have the **latest version of MySQL** and the **required python libraries** installed.
 
-To install the python libraries, run the following command in your terminal:
+Then, in your **MySQL terminal**, run the following commands to initialize the databases:
+```shell
+CREATE DATABASE credentials;
+CREATE DATABASE scores;
+CREATE DATABASE mochi;
+CREATE DATABASE notebooks;
+```
+To install the required python libraries, run the following command in your terminal:
 ```shell
 python -m pip install -r requirements.txt
 ```
