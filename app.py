@@ -3,11 +3,12 @@ from selen import ManagebacDriver
 from dbm.credentials import Credentials
 from dbm.scores import Scores
 from dbm.mochi import Mochi
+from dbm.notebooks import Notebooks
 from functionals.grades import new_task_predict
 from werkzeug.utils import secure_filename
 import os
 
-ALLOWED_EXTENSIONS = {"mochi"}
+ALLOWED_EXTENSIONS = {"mochi", "pdf"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = os.path.abspath("uploads")
@@ -34,7 +35,9 @@ def toolbox_sub(sub):
         decks = mochi.browse()
         return render_template("mochi.html", decks=decks)
     elif sub == "notebooks":
-        return render_template("notebooks.html")
+        notebooks = Notebooks()
+        l = notebooks.browse()
+        return render_template("notebooks.html", notebooks=l)
     return None
 
 
@@ -66,6 +69,30 @@ def upload(sub):
                 mochi.new(name, description, request.cookies.get("username").split('@')[0][2:], os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
                 return render_template("upload_mochi.html", success=True)
+
+            else:
+                return "Illegal file upload"
+
+    elif sub == "notebooks":
+        if request.method == "GET":
+            return render_template("upload_notebooks.html", success=False)
+
+        elif request.method == "POST":
+            file = request.files["notebook_file"]
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+                notebooks = Notebooks()
+                name = request.form.get("name")
+                description = request.form.get("description")
+                notebooks.new(name, description, request.cookies.get("username").split('@')[0][2:], os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+                return render_template("upload_notebooks.html", success=True)
+
+            else:
+                return "Illegal file upload"
+
     return None
 
 
@@ -130,7 +157,6 @@ def tasks():
 
 @app.route("/settings", methods=["POST", "GET"])
 def settings():
-    # TODO: Add login support for microsoft accounts
     if request.method == "GET":
         return render_template("settings.html", success=False)
 
@@ -244,4 +270,5 @@ if __name__ == "__main__":
     Credentials.reset()
     Scores.reset()
     Mochi.reset()
+    Notebooks.reset()
     app.run(host="0.0.0.0", port=8080, debug=True)
