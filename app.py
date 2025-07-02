@@ -1,10 +1,20 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for
+from flask import Flask, render_template, request, make_response, redirect, send_from_directory, url_for
 from selen import ManagebacDriver
 from dbm.credentials import Credentials
 from dbm.scores import Scores
+from dbm.mochi import Mochi
 from functionals.grades import new_task_predict
+from werkzeug.utils import secure_filename
+import os
+
+ALLOWED_EXTENSIONS = {"mochi"}
 
 app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = os.path.abspath("uploads")
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/projects")
@@ -12,9 +22,51 @@ def projects():
     return render_template("projects.html")
 
 
+@app.route("/toolbox")
+def toolbox():
+    return render_template("toolbox.html")
+
+
 @app.route("/toolbox/<sub>")
 def toolbox_sub(sub):
-    return render_template("toolbox.html")
+    if sub == "mochi":
+        mochi = Mochi()
+        decks = mochi.browse()
+        return render_template("mochi.html", decks=decks)
+    elif sub == "notebooks":
+        return render_template("notebooks.html")
+    return None
+
+
+@app.route("/download/<sub>")
+def download(sub):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], sub)
+
+
+@app.route("/upload/<sub>", methods=["POST", "GET"])
+def upload(sub):
+    username = request.cookies.get("username")
+    password = request.cookies.get("password")
+    if username is None or password is None:
+        return redirect(url_for("settings"))
+
+    if sub == "mochi":
+        if request.method == "GET":
+            return render_template("upload_mochi.html", success=False)
+
+        elif request.method == "POST":
+            file = request.files["deck_file"]
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+                mochi = Mochi()
+                name = request.form.get("name")
+                description = request.form.get("description")
+                mochi.new(name, description, request.cookies.get("username").split('@')[0][2:], os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
+                return render_template("upload_mochi.html", success=True)
+    return None
 
 
 @app.route("/tasks", methods=["POST", "GET"])
@@ -78,6 +130,7 @@ def tasks():
 
 @app.route("/settings", methods=["POST", "GET"])
 def settings():
+    # TODO: Add login support for microsoft accounts
     if request.method == "GET":
         return render_template("settings.html", success=False)
 
@@ -190,4 +243,5 @@ def root():
 if __name__ == "__main__":
     Credentials.reset()
     Scores.reset()
+    Mochi.reset()
     app.run(host="0.0.0.0", port=8080, debug=True)

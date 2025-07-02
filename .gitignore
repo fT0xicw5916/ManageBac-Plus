@@ -116,3 +116,6 @@ dmypy.json
 cython_debug/
 instance/*
 !instance/.gitignore
+
+uploads/*
+.idea/
