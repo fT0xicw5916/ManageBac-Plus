@@ -29,11 +29,18 @@ def toolbox():
     return render_template("toolbox.html")
 
 
-@app.route("/toolbox/<sub>")
+@app.route("/toolbox/<sub>", methods=["POST", "GET"])
 def toolbox_sub(sub):
     if sub == "mochi":
         mochi = Mochi()
-        decks = mochi.browse()
+        decks = None
+        if request.method == "GET":
+            decks = mochi.browse()
+        elif request.method == "POST":
+            if request.form.get("method") == "name":
+                decks = mochi.search_by_name(request.form.get("search"))
+            elif request.form.get("method") == "author":
+                decks = mochi.search_by_author(request.form.get("search"))
         return render_template("mochi.html", decks=decks)
     elif sub == "notebooks":
         notebooks = Notebooks()
