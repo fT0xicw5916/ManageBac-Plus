@@ -44,7 +44,14 @@ def toolbox_sub(sub):
         return render_template("mochi.html", decks=decks)
     elif sub == "notebooks":
         notebooks = Notebooks()
-        l = notebooks.browse()
+        l = None
+        if request.method == "GET":
+            l = notebooks.browse()
+        elif request.method == "POST":
+            if request.form.get("method") == "name":
+                l = notebooks.search_by_name(request.form.get("search"))
+            elif request.form.get("method") == "author":
+                l = notebooks.search_by_author(request.form.get("search"))
         return render_template("notebooks.html", notebooks=l)
     return None
 
