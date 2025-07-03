@@ -127,7 +127,7 @@ def tasks():
         credentials = Credentials()
         username = request.cookies.get("username")
         password = request.cookies.get("password")
-        driver = ManagebacDriver(username, password)
+        driver = ManagebacDriver(username, password, microsoft=int(request.cookies.get("microsoft")))
 
         id = credentials.search(username)[-1][0]
         category = request.form.get("category")
@@ -137,6 +137,8 @@ def tasks():
         current_overall = scores.search_score(id, subject)[-1][1]
         task_num = driver.get_task_num(subject, category)
         local_avg = scores.get_category_score(id, subject)[category]
+
+        driver.terminate()
 
         grades_dict = {}
 
@@ -184,11 +186,13 @@ def settings():
             res = make_response(render_template("settings.html", success=True))
             res.set_cookie("username", username)
             res.set_cookie("password", password)
+            res.set_cookie("microsoft", "1" if request.form.get("microsoft") == "microsoft" else "0")
             return res
         else:
             res = make_response(redirect(url_for(n)))
             res.set_cookie("username", username)
             res.set_cookie("password", password)
+            res.set_cookie("microsoft", "1" if request.form.get("microsoft") == "microsoft" else "0")
             return res
 
     return None
@@ -225,8 +229,9 @@ def grades():
                     "grades": list(zip(n, s, w))
                 })
         else:  # Data not cached
-            driver = ManagebacDriver(username, password)
+            driver = ManagebacDriver(username, password, microsoft=int(request.cookies.get("microsoft")))
             g = driver.get_grades()
+            driver.terminate()
 
             # New credential entry
             classes = []

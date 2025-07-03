@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
 
 class ManagebacDriver:
@@ -8,7 +11,7 @@ class ManagebacDriver:
     Credits to William Jin Huidong.
     """
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, microsoft=False):
         self.class_excludes = ["Homeroom", "Study Hall", "Bedtime", "SDL", "历史", "政治"]
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -18,12 +21,25 @@ class ManagebacDriver:
 
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
-        box_usr = self.driver.find_element(By.ID, "session_login")
-        box_psw = self.driver.find_element(By.ID, "session_password")
-        btn_log = self.driver.find_element(By.NAME, "commit")
-        box_usr.send_keys(username)
-        box_psw.send_keys(password)
-        btn_log.click()
+        if microsoft:
+            self.driver.find_element(By.ID, "microsoft").click()
+            usr = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "i0116")))
+            usr.send_keys(username)
+            self.driver.find_element(By.ID, "idSIButton9").click()
+            pwd = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "i0118")))
+            pwd.send_keys(password)
+            time.sleep(3)
+            self.driver.find_element(By.ID, "idSIButton9").click()
+            time.sleep(3)
+            self.driver.find_element(By.ID, "idBtn_Back").click()
+            time.sleep(5)
+        else:
+            box_usr = self.driver.find_element(By.ID, "session_login")
+            box_psw = self.driver.find_element(By.ID, "session_password")
+            btn_log = self.driver.find_element(By.NAME, "commit")
+            box_usr.send_keys(username)
+            box_psw.send_keys(password)
+            btn_log.click()
 
     def get_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
@@ -108,6 +124,9 @@ class ManagebacDriver:
             print(info_dict)
 
         return info_classes
+
+    def terminate(self):
+        self.driver.quit()
 
 
 if __name__ == "__main__":
