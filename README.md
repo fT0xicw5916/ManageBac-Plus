@@ -58,7 +58,7 @@ Just to name a few. However, we are also actively working on finding solutions t
 ## TODOs
 - Add login support for Microsoft accounts
 - Update frontend design
-- Searching system
+- Fuzzy searching system (Currently only exact search)
 - Simply use GET requests for GPA data
 - GPA trend graph generation
 - Remove/Modulize repeating code
