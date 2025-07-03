@@ -25,53 +25,6 @@ class ManagebacDriver:
         box_psw.send_keys(password)
         btn_log.click()
 
-    def get_category_score(self, subject, category):
-        self.driver.get("https://huijia.managebac.cn/student")
-
-        unfiltered_li_classes = self.driver.find_elements(By.XPATH, "/html/body/div/div[1]/ul/li[3]/ul/*")[:-1]
-        name_and_url = None
-        for unfiltered_li_class in unfiltered_li_classes:
-            unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
-            unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
-
-            if unfiltered_text == subject:
-                name_and_url = (unfiltered_text, unfiltered_link.get_attribute("href"))
-                break
-
-        if name_and_url is None:
-            return "Subject not found"
-
-        self.driver.get(name_and_url[1] + "/units")
-        categories_divs = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/aside/div/section[3]/div/*")[2:]
-
-        score = None
-        for div in categories_divs:
-            if div.find_element(By.XPATH, "div[1]/div").get_attribute("innerHTML") == category:
-                score_string = div.find_element(By.XPATH, "div[2]").get_attribute("innerHTML")
-                score = float(score_string[score_string.find('(')+1:score_string.find('%')])
-
-        return score
-
-    def get_overall(self, subject):
-        self.driver.get("https://huijia.managebac.cn/student")
-
-        unfiltered_li_classes = self.driver.find_elements(By.XPATH, "/html/body/div/div[1]/ul/li[3]/ul/*")[:-1]
-        name_and_url = None
-        for unfiltered_li_class in unfiltered_li_classes:
-            unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
-            unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
-
-            if unfiltered_text == subject:
-                name_and_url = (unfiltered_text, unfiltered_link.get_attribute("href"))
-                break
-
-        if name_and_url is None:
-            return "Subject not found"
-
-        self.driver.get(name_and_url[1] + "/units")
-        overall = self.driver.find_element(By.XPATH, "/html/body/div/div[2]/aside/div/section[3]/div/div[2]/div[2]").get_attribute("innerHTML")
-        return float(overall[overall.find('(')+1:overall.find('%')])
-
     def get_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
 
