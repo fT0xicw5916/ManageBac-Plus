@@ -61,5 +61,6 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Searching system
 - Simply use GET requests for GPA data
 - GPA trend graph generation
-- Projects page
+- File size limitation when uploading
+- Remove/Modulize repeating code
 - All kinds of encryptions for the credentials database (Hashing?)

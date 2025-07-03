@@ -1140,9 +1140,12 @@ input, select, textarea {
 			-ms-transition-delay: 0.75s;
 			transition-delay: 0.75s;
 			background-image: linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("../imgs/overlay.png");
-			background-size: auto, 256px 256px;
-			background-position: center, center;
-			background-repeat: no-repeat, repeat;
+			background-size: auto,
+ 256px 256px;
+			background-position: center,
+ center;
+			background-repeat: no-repeat,
+ repeat;
 			z-index: 2;
 		}
 
@@ -1670,9 +1673,14 @@ input, select, textarea {
     padding: 20px;
 }
 
+.project {
+    text-align: center;
+    padding: 35px;
+    width: 100vw;
+}
+
 .subjects:after {
     content: "";
     display: table;
     clear: both;
 }
-
