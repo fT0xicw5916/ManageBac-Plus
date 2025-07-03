@@ -11,6 +11,7 @@ import os
 ALLOWED_EXTENSIONS = {"mochi", "pdf"}
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
 app.config["UPLOAD_FOLDER"] = os.path.abspath("uploads")
 
 
