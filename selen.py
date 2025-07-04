@@ -116,7 +116,6 @@ class ManagebacDriver:
                     break
 
             if not done:
-                print("Error occurred while trying to get grade")
                 return None
 
             info_dict["grades"] = info_grades

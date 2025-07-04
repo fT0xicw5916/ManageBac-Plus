@@ -56,9 +56,10 @@ We're all just high school students and making perfect dynamic websites is obvio
 Just to name a few. However, we are also actively working on finding solutions to these problems, and I'm confident that this process won't take long.
 
 ## TODOs
-- Add login support for Microsoft accounts
 - Update frontend design
+- Microsoft login stale element find a better waiting method other than time.sleep()
 - Fuzzy searching system (Currently only exact search)
+- Logger for all activities and debugging
 - Simply use GET requests for GPA data
 - GPA trend graph generation
 - Remove/Modulize repeating code
