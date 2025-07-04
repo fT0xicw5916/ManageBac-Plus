@@ -6,7 +6,7 @@ class Notebooks:
     def __init__(self):
         self.con = C.connect(database="notebooks", autocommit=True)
         self.cur = self.con.cursor()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("app.notebooks")
 
     def new(self, name, description, author, url):
         command = f"INSERT INTO notebooks VALUES (\"{name}\", \"{description}\", NOW(), \"{author}\", \"{url}\");"
@@ -34,7 +34,7 @@ class Notebooks:
         cur.close()
         con.close()
 
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger("app.notebooks")
         logger.warning("Notebooks database RESET")
 
 

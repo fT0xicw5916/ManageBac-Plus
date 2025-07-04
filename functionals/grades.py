@@ -5,6 +5,7 @@ def new_task_predict(raw_score, max_score, current_overall, task_num, local_avg,
     For example, "How would my overall score and quiz average score vary if I get a 60/100 in the new quiz, given that my current overall score is 90, there are a total of 10 quizzes already logged, the current quiz average score is 90, and the current grade information?" ==> new_task_predict(60, 100, 90, 10, 90, {grades}, "Quiz")
 
     Credits to Charles Zhang Chuhan.
+
     :param raw_score: The raw score of the new task to be simulated. For example, to simulate a new task with grades 60/100, raw_score = 60
     :param max_score: The maximum score of the new task to be simulated. For example, to simulate a new task with grades 13/16, max_score = 16
     :param current_overall: The subject's current overall score before the new task is simulated

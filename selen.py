@@ -19,7 +19,7 @@ class ManagebacDriver:
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--incognito")
         self.driver = webdriver.Chrome(options=chrome_options)
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("app.selen")
 
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
@@ -42,7 +42,7 @@ class ManagebacDriver:
             box_usr.send_keys(username)
             box_psw.send_keys(password)
             btn_log.click()
-        self.logger.info(f"Login success (Username = {username}, Password = {password}, {"MS" if microsoft else "MB"})")
+        self.logger.info(f"Login success (Username = '{username}', Password = '{password}', {"MS" if microsoft else "MB"})")
 
     def get_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
@@ -125,7 +125,7 @@ class ManagebacDriver:
 
             info_dict["grades"] = info_grades
             info_classes.append(info_dict)
-            self.logger.info(f"Grade hit:    {info_dict}")
+            self.logger.info(f"Grade hit: {info_dict}")
 
         return info_classes
 

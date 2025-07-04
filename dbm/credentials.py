@@ -6,7 +6,7 @@ class Credentials:
     def __init__(self):
         self.con = C.connect(database="credentials", autocommit=True)
         self.cur = self.con.cursor()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("app.credentials")
 
     def new(self, email, password, classes):
         s = ""
@@ -29,7 +29,7 @@ class Credentials:
         cur.close()
         con.close()
 
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger("app.credentials")
         logger.warning("Credentials database RESET")
 
 

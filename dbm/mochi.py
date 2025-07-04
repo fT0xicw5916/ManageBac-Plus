@@ -6,7 +6,7 @@ class Mochi:
     def __init__(self):
         self.con = C.connect(database="mochi", autocommit=True)
         self.cur = self.con.cursor()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("app.mochi")
 
     def new(self, name, description, author, url):
         command = f"INSERT INTO mochi VALUES (\"{name}\", \"{description}\", NOW(), \"{author}\", \"{url}\");"
@@ -34,7 +34,7 @@ class Mochi:
         cur.close()
         con.close()
 
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger("app.mochi")
         logger.warning("Mochi database RESET")
 
 

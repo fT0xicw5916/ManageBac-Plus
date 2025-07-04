@@ -7,15 +7,20 @@ from dbm.notebooks import Notebooks
 from functionals.grades import new_task_predict
 from werkzeug.utils import secure_filename
 import os
+import sys
 import logging
 
 ALLOWED_EXTENSIONS = {"mochi", "pdf"}
 
-app = Flask(__name__)
+app = Flask("app")
 app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
 app.config["UPLOAD_FOLDER"] = os.path.abspath("uploads")
 
-logger = logging.getLogger(__name__)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter("[%(levelname)s] %(asctime)s - %(name)s - %(message)s"))
+app.logger.handlers.clear()
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.DEBUG)
 
 
 def allowed_file(filename):
@@ -57,13 +62,13 @@ def toolbox_sub(sub):
                 l = notebooks.search_by_author(request.form.get("search"))
         return render_template("notebooks.html", notebooks=l)
 
-    logger.error(f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}")
+    app.logger.error(f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}")
     return None
 
 
 @app.route("/download/<sub>")
 def download(sub):
-    logger.info(f"Download requested for file {os.path.join(app.config["UPLOAD_FOLDER"], sub)}")
+    app.logger.info(f"Download requested for file {os.path.join(app.config["UPLOAD_FOLDER"], sub)}")
     return send_from_directory(app.config["UPLOAD_FOLDER"], sub)
 
 
@@ -89,11 +94,11 @@ def upload(sub):
                 description = request.form.get("description")
                 mochi.new(name, description, request.cookies.get("username").split('@')[0][2:], os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
-                logger.info(f"Upload requested at /upload/{sub}: {os.path.join(app.config["UPLOAD_FOLDER"], filename)}")
+                app.logger.info(f"Upload requested at /upload/{sub}: {os.path.join(app.config["UPLOAD_FOLDER"], filename)}")
                 return render_template("upload_mochi.html", success=True)
 
             else:
-                logger.error(f"Illegal upload requested at /upload/{sub}: {file.filename}")
+                app.logger.error(f"Illegal upload requested at /upload/{sub}: {file.filename}")
                 return None
 
     elif sub == "notebooks":
@@ -111,14 +116,14 @@ def upload(sub):
                 description = request.form.get("description")
                 notebooks.new(name, description, request.cookies.get("username").split('@')[0][2:], os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
-                logger.info(f"Upload requested at /upload/{sub}: {os.path.join(app.config["UPLOAD_FOLDER"], filename)}")
+                app.logger.info(f"Upload requested at /upload/{sub}: {os.path.join(app.config["UPLOAD_FOLDER"], filename)}")
                 return render_template("upload_notebooks.html", success=True)
 
             else:
-                logger.error(f"Illegal upload requested at /upload/{sub}: {file.filename}")
+                app.logger.error(f"Illegal upload requested at /upload/{sub}: {file.filename}")
                 return None
 
-    logger.error(f"Subdomain out of range at /upload/<sub>; requested /upload/{sub}")
+    app.logger.error(f"Subdomain out of range at /upload/<sub>; requested /upload/{sub}")
     return None
 
 
@@ -126,7 +131,7 @@ def upload(sub):
 def tasks():
     subject = request.args.get("subject")
     if subject is None:
-        logger.error("No subject specified at /tasks")
+        app.logger.error("No subject specified at /tasks")
         return None
 
     # Since /tasks is redirected from /grades, we can assume the grades data is cached
@@ -181,7 +186,7 @@ def tasks():
 
         return render_template("tasks_calc.html", origin=subject, category=category, new_raw_score=new_raw_score, new_max_score=new_max_score, new_overall=new_overall, delta_overall=delta_overall, new_local_avg=new_local_avg, delta_local=delta_local)
 
-    logger.error("Unknown request method at /tasks")
+    app.logger.error("Unknown request method at /tasks")
     return None
 
 
@@ -208,7 +213,7 @@ def settings():
             res.set_cookie("microsoft", "1" if request.form.get("microsoft") == "microsoft" else "0")
             return res
 
-    logger.error("Unknown request method at /settings")
+    app.logger.error("Unknown request method at /settings")
     return None
 
 
@@ -287,7 +292,7 @@ def grades():
                 break
         return render_template("grades_calc.html", result=f"{result:0.3f}", target=target, term=term, subject=subject, overall=overall)
 
-    logger.error("Unknown request method at /grades")
+    app.logger.error("Unknown request method at /grades")
     return None
 
 
@@ -306,7 +311,5 @@ if __name__ == "__main__":
     Scores.reset()
     Mochi.reset()
     Notebooks.reset()
-
-    logging.basicConfig(filename="log.txt", filemode='w', datefmt="%Y-%m-%d %H:%M:%S", level=logging.DEBUG)
 
     app.run(host="0.0.0.0", port=8080, debug=True)

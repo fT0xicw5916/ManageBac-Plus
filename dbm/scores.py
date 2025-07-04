@@ -6,7 +6,7 @@ class Scores:
     def __init__(self):
         self.con = C.connect(database="scores", autocommit=True)
         self.cur = self.con.cursor()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("app.scores")
 
     def new_class(self, name: str, weights):
         w = ""
@@ -63,7 +63,7 @@ class Scores:
         cur.close()
         con.close()
 
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger("app.scores")
         logger.warning("Scores database RESET")
 
 
