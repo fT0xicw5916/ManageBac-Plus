@@ -1,16 +1,20 @@
 import mysql.connector as C
+import logging
 
 
 class Scores:
     def __init__(self):
         self.con = C.connect(database="scores", autocommit=True)
         self.cur = self.con.cursor()
+        self.logger = logging.getLogger(__name__)
 
     def new_class(self, name: str, weights):
         w = ""
         for weight in weights:
             w += '`' + weight + '`' + " FLOAT(24), "
-        self.cur.execute(f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});")
+        command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});"
+        self.cur.execute(command)
+        self.logger.info(f"New class table created with '{command}'")
 
     def check_class(self, name):
         self.cur.execute(f"SHOW TABLES LIKE \"{name}\";")
@@ -23,7 +27,9 @@ class Scores:
                 data += "NULL, "
                 continue
             data += str(i) + ", "
-        self.cur.execute(f"INSERT INTO `{c}` VALUES ({id}, {data[:-2]});")
+        command = f"INSERT INTO `{c}` VALUES ({id}, {data[:-2]});"
+        self.cur.execute(command)
+        self.logger.info(f"New score entry created with '{command}'")
 
     def search_score(self, id, c):
         self.cur.execute(f"SELECT * FROM `{c}` WHERE id = {id};")
@@ -56,6 +62,9 @@ class Scores:
         cur.execute("DROP TABLE IF EXISTS PreCalculus_Extended_Grade_10_6;")
         cur.close()
         con.close()
+
+        logger = logging.getLogger(__name__)
+        logger.warning("Scores database RESET")
 
 
 if __name__ == "__main__":

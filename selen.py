@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import logging
 
 
 class ManagebacDriver:
@@ -18,6 +19,7 @@ class ManagebacDriver:
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--incognito")
         self.driver = webdriver.Chrome(options=chrome_options)
+        self.logger = logging.getLogger(__name__)
 
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
@@ -40,6 +42,7 @@ class ManagebacDriver:
             box_usr.send_keys(username)
             box_psw.send_keys(password)
             btn_log.click()
+        self.logger.info(f"Login success (Username = {username}, Password = {password}, {"MS" if microsoft else "MB"})")
 
     def get_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
@@ -55,7 +58,8 @@ class ManagebacDriver:
                 break
 
         if name_and_url is None:
-            return "Subject not found"
+            self.logger.error(f"Subject not found when trying to get task number for {subject}/{category}")
+            return None
 
         self.driver.get(name_and_url[1] + "/core_tasks")
         tasks_list_divs = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/div[2]/div/section/div/div[3]/*")
@@ -116,11 +120,12 @@ class ManagebacDriver:
                     break
 
             if not done:
+                self.logger.warning(f"Failed to retrieve GPA data for {name} ({url}) after {tries} tries")
                 return None
 
             info_dict["grades"] = info_grades
             info_classes.append(info_dict)
-            print(info_dict)
+            self.logger.info(f"Grade hit:    {info_dict}")
 
         return info_classes
 

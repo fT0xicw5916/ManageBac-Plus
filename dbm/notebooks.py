@@ -1,13 +1,17 @@
 import mysql.connector as C
+import logging
 
 
 class Notebooks:
     def __init__(self):
         self.con = C.connect(database="notebooks", autocommit=True)
         self.cur = self.con.cursor()
+        self.logger = logging.getLogger(__name__)
 
     def new(self, name, description, author, url):
-        self.cur.execute(f"INSERT INTO notebooks VALUES (\"{name}\", \"{description}\", NOW(), \"{author}\", \"{url}\");")
+        command = f"INSERT INTO notebooks VALUES (\"{name}\", \"{description}\", NOW(), \"{author}\", \"{url}\");"
+        self.cur.execute(command)
+        self.logger.info(f"New notebooks entry created with '{command}'")
 
     def search_by_name(self, name):
         self.cur.execute(f"SELECT * FROM notebooks WHERE name = \"{name}\";")
@@ -29,6 +33,9 @@ class Notebooks:
         cur.execute("CREATE TABLE notebooks (name VARCHAR(255), description TEXT, date TIMESTAMP, author VARCHAR(255), url VARCHAR(255));")
         cur.close()
         con.close()
+
+        logger = logging.getLogger(__name__)
+        logger.warning("Notebooks database RESET")
 
 
 if __name__ == "__main__":
