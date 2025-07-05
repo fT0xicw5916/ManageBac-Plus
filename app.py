@@ -5,26 +5,21 @@ from dbm.scores import Scores
 from dbm.mochi import Mochi
 from dbm.notebooks import Notebooks
 from functionals.grades import new_task_predict
+from functionals.files import allowed_file
 from werkzeug.utils import secure_filename
 import os
 import sys
 import logging
 
-ALLOWED_EXTENSIONS = {"mochi", "pdf"}
-
 app = Flask("app")
 app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
-app.config["UPLOAD_FOLDER"] = os.path.abspath("uploads")
+app.config["UPLOAD_FOLDER"] = os.path.abspath("files")
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setFormatter(logging.Formatter("[%(levelname)s] %(asctime)s - %(name)s - %(message)s"))
 app.logger.handlers.clear()
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.DEBUG)
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/projects")
