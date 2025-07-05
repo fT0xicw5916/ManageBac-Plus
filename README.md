@@ -1,5 +1,5 @@
 # ManageBac-Plus
-> Since ManageBac **SUCKS**, we decided to make a new one. A better one. *This, is ManageBac Plus.*
+> Since ManageBac **SUCKS**, we decided to make a new one. A better one. *This, is **ManageBac Plus.***
 
 Just a simple python Flask webapp built around ManageBac that adds a lot of useful functions to it.
 
@@ -47,7 +47,6 @@ The app will be deployed at `http://localhost:8080/` and will be open to LAN by 
 ## Current limitations
 We're all just high school students and making perfect dynamic websites is obviously not our daily job. Hence I'll have to admit that there are many limitations to the current website:
 - Lack of encryption for personal credentials
-- Unsafe file upload system
 - Horrible database schema that minimizes efficiency
 - Tons of hidden bugs not fixed
 - Code inconsistency
@@ -59,7 +58,6 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Update frontend design
 - Microsoft login stale element find a better waiting method other than time.sleep()
 - Fuzzy searching system (Currently only exact search)
-- Logger for all activities and debugging
 - Simply use GET requests for GPA data
 - GPA trend graph generation
 - Remove/Modulize repeating code
