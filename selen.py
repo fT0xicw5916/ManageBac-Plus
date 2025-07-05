@@ -9,6 +9,8 @@ import logging
 
 class ManagebacDriver:
     """
+    Custom selenium driver class for fetching data from ManageBac.
+
     Credits to William Jin Huidong.
     """
 
