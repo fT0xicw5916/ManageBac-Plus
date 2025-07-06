@@ -117,5 +117,5 @@ cython_debug/
 instance/*
 !instance/.gitignore
 
-uploads/*
 .idea/
+files/
