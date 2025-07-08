@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, make_response, redirect, send_from_directory, url_for
 from selen import ManagebacDriver
+from cache import cache_grade_data, get_grade_data
 from dbm.credentials import Credentials
 from dbm.scores import Scores
 from dbm.mochi import Mochi
@@ -45,6 +46,7 @@ def toolbox_sub(sub):
             elif request.form.get("method") == "author":
                 decks = mochi.search_by_author(request.form.get("search"))
         return render_template("mochi.html", decks=decks)
+
     elif sub == "notebooks":
         notebooks = Notebooks()
         l = None
@@ -56,6 +58,32 @@ def toolbox_sub(sub):
             elif request.form.get("method") == "author":
                 l = notebooks.search_by_author(request.form.get("search"))
         return render_template("notebooks.html", notebooks=l)
+
+    # elif sub == "trend":
+    #     if request.method == "GET":
+    #         username = request.cookies.get("username")
+    #         if username is None:
+    #             return redirect(url_for("settings"))
+
+            # credentials = Credentials()
+            # data = credentials.search(username)
+            # if len(data) == 0:  # Data not cached
+            #     grades_data = cache_grade_data(username, request.cookies.get("password"), int(request.cookies.get("microsoft")))
+            #     return render_template("trend.html", classes=[i["class_name"] for i in grades_data])
+            # else:  # Data cached
+            #     data = data[-1]
+            #     return render_template("trend.html", classes=data[3:])
+
+        # elif request.method == "POST":
+        #     subject = request.form.get("class")
+
+            # driver = ManagebacDriver(request.cookies.get("username"), request.cookies.get("password"), int(request.cookies.get("microsoft")))
+            # past_tasks = driver.get_past_tasks(subject)
+            # driver.terminate()
+
+            # trend = []
+            # for name, score in past_tasks.items():
+            # return render_template("image.html", prev_href="/toolbox/trend", prev="Trend Graphs", title="Trend Graph", src=src)
 
     app.logger.error(f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}")
     return None
@@ -222,51 +250,13 @@ def grades():
         if username is None or password is None:
             return redirect(url_for("settings", next="grades"))
 
+        g = None
         credentials = Credentials()
-        scores = Scores()
-        g = []
 
         if len(credentials.search(username)) > 0:  # Data cached
-            data = credentials.search(username)[-1]
-            id = data[0]
-            for class_ in data[3:]:
-                s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[-1][1:]]
-                n = [i[0] for i in scores.get_weight_names(class_)[1:]]
-                w = []
-                for i in n:
-                    if i == "Overall":
-                        w.append(None)
-                        continue
-                    w.append(int(i[i.find('(')+1:i.find('%')]))
-                g.append({
-                    "class_name": class_,
-                    "grades": list(zip(n, s, w))
-                })
+            g = get_grade_data(username)
         else:  # Data not cached
-            driver = ManagebacDriver(username, password, microsoft=int(request.cookies.get("microsoft")))
-            g = driver.get_grades()
-            driver.terminate()
-
-            # New credential entry
-            classes = []
-            for i in g:
-                classes.append(i["class_name"])
-                if not scores.check_class(i["class_name"]):
-                    w = []
-                    for k in i["grades"]:
-                        if k[0] == "Overall":
-                            continue
-                        w.append(k[0])
-                    scores.new_class(i["class_name"], w)
-            credentials.new(username, password, classes)
-
-            # New score entry
-            id = credentials.search(username)[-1][0]
-            for i in g:
-                s = []
-                for k in i["grades"]:
-                    s.append(k[1])
-                scores.new_score(id, i["class_name"], s)
+            g = cache_grade_data(username, password, int(request.cookies.get("microsoft")))
 
         return render_template("grades.html", grades=g)
 
