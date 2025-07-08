@@ -13,8 +13,8 @@ class Credentials:
         for c in classes:
             s += '\"' + c + "\", "
         command = f"INSERT INTO credentials VALUES (0, \"{email}\", \"{password}\", {s[:-2]});"
-        self.cur.execute(command)
         self.logger.info(f"New credentials entry created with '{command}'")
+        self.cur.execute(command)
 
     def search(self, email):
         self.cur.execute(f"SELECT * FROM credentials WHERE email = \"{email}\";")

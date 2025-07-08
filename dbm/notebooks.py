@@ -10,8 +10,8 @@ class Notebooks:
 
     def new(self, name, description, author, url):
         command = f"INSERT INTO notebooks VALUES (\"{name}\", \"{description}\", NOW(), \"{author}\", \"{url}\");"
-        self.cur.execute(command)
         self.logger.info(f"New notebooks entry created with '{command}'")
+        self.cur.execute(command)
 
     def search_by_name(self, name):
         self.cur.execute(f"SELECT * FROM notebooks WHERE name = \"{name}\";")

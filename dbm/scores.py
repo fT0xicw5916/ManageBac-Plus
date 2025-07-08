@@ -13,8 +13,8 @@ class Scores:
         for weight in weights:
             w += '`' + weight + '`' + " FLOAT(24), "
         command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});"
-        self.cur.execute(command)
         self.logger.info(f"New class table created with '{command}'")
+        self.cur.execute(command)
 
     def check_class(self, name):
         self.cur.execute(f"SHOW TABLES LIKE \"{name}\";")
@@ -28,8 +28,8 @@ class Scores:
                 continue
             data += str(i) + ", "
         command = f"INSERT INTO `{c}` VALUES ({id}, {data[:-2]});"
-        self.cur.execute(command)
         self.logger.info(f"New score entry created with '{command}'")
+        self.cur.execute(command)
 
     def search_score(self, id, c):
         self.cur.execute(f"SELECT * FROM `{c}` WHERE id = {id};")
