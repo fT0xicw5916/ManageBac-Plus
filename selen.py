@@ -23,6 +23,10 @@ class ManagebacDriver:
         self.driver = webdriver.Chrome(options=chrome_options)
         self.logger = logging.getLogger("app.selen")
 
+        self.classes_xpath = "/html/body/div[1]/div[1]/ul/li[4]/ul/*"
+        self.grades_xpath = "/html/body/div/div[2]/aside/div/section[2]/div/*"
+        self.tasks_xpath = "/html/body/div/div[2]/div[2]/div/section/div/div[3]/*"
+
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
         if microsoft:
@@ -49,7 +53,7 @@ class ManagebacDriver:
     def get_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
 
-        unfiltered_li_classes = self.driver.find_elements(By.XPATH, "/html/body/div/div[1]/ul/li[3]/ul/*")[:-1]
+        unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
         name_and_url = None
         for unfiltered_li_class in unfiltered_li_classes:
             unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
@@ -64,7 +68,7 @@ class ManagebacDriver:
             return None
 
         self.driver.get(name_and_url[1] + "/core_tasks")
-        tasks_list_divs = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/div[2]/div/section/div/div[3]/*")
+        tasks_list_divs = self.driver.find_elements(By.XPATH, self.tasks_xpath)
 
         task_num = 0
         for div in tasks_list_divs:
@@ -79,7 +83,7 @@ class ManagebacDriver:
         self.driver.get("https://huijia.managebac.cn/student")
 
         name_and_urls = []
-        unfiltered_li_classes = self.driver.find_elements(By.XPATH, "/html/body/div/div[1]/ul/li[3]/ul/*")[:-1]
+        unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
         for unfiltered_li_class in unfiltered_li_classes:
             unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
             unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
@@ -103,7 +107,7 @@ class ManagebacDriver:
                 count += 1
 
                 self.driver.get(url + "/units")
-                div_grades = self.driver.find_elements(By.XPATH, "/html/body/div/div[2]/aside/div/section[2]/div/*")[1:]
+                div_grades = self.driver.find_elements(By.XPATH, self.grades_xpath)[1:]
 
                 for i, div_grade in enumerate(div_grades):
                     if i == 0:
