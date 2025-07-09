@@ -182,22 +182,7 @@ def tasks():
 
         grades_dict = {}
 
-        g = []
-        data = credentials.search(username)[-1]
-        for class_ in data[3:]:
-            s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[-1][1:]]
-            n = [i[0] for i in scores.get_weight_names(class_)[1:]]
-            w = []
-            for i in n:
-                if i == "Overall":
-                    w.append(None)
-                    continue
-                w.append(int(i[i.find('(') + 1:i.find('%')]))
-            g.append({
-                "class_name": class_,
-                "grades": list(zip(n, s, w))
-            })
-
+        g = get_grade_data(username)
         for s in g:
             if s["class_name"] == subject:
                 for c in s["grades"]:
