@@ -61,4 +61,5 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Simply use GET requests for GPA data
 - Finish GPA trend graph generation (DIFFICULT)
 - Remove/Modulize repeating/useless code
+- Automatic clean image cache in static/gen
 - All kinds of encryptions for the credentials database (Hashing?)
