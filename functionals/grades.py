@@ -1,3 +1,80 @@
+from matplotlib import pyplot as plt
+import numpy as np
+import random
+import matplotlib
+import os
+
+
+def perc2rank(value, m=100):
+    """
+    Converts percentage/scalar GPA to IB's 7-based GPA.
+
+    :param value: Percentage/scalar grade of the task, default out of 100
+    :param m: Maximum grade of the task, defaulting to 100
+    :return: IB's strict 7-based GPA of the task, no rounding, returns 0 if input is out of domain, returns 7 if input is higher than 100%
+    """
+    p = (float(value) / float(m)) * 100
+    return 7 if p >= 90 else 6 if p >= 80 else 5 if p >= 70 else 4 if p >= 65 else 3 if p >= 60 else 2 if p >= 40 else 1 if p >= 0 else 0
+
+
+def radar_ranks(subjects, ranks):
+    """
+    Graphs the radar graph of given subjects with respect to their IB ranks.
+
+    Credits to Charles Zhang Chuhan.
+
+    :param subjects: A list of the names of the subjects
+    :param ranks: A list of the ranks of the subjects
+    :return: The path where the image file of the radar graph is stored relative to static/
+    """
+    matplotlib.use("agg")
+    circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
+    closed_circle = circle.copy()
+    closed_circle.append(0)
+    ranks.append(ranks[0])
+    ax = plt.subplot(polar=True)
+    plt.xticks(circle, subjects)
+    plt.yticks([0, 1, 2, 3, 4, 5, 6, 7], ['0', '1', '2', '3', '4', '5', '6', '7'])
+    plt.ylim(0, 7)
+    theta = np.linspace(0, 2 * np.pi, 100)
+    ax.plot(theta, [3] * len(theta), color="red", alpha=0.3, linewidth=1.5)
+    ax.plot(closed_circle, ranks, color="black")
+    ax.fill(closed_circle, ranks, alpha=0.2, color="blue")
+    id = str(random.randint(0, 1000000))
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"))
+    plt.close()
+    return f"gen/{id}.png"
+
+
+def radar_percs(subjects, percs):
+    """
+    Graphs the radar graph of given subjects with respect to their percentage grades.
+
+    Credits to Charles Zhang Chuhan.
+
+    :param subjects: A list of the names of the subjects
+    :param percs: A list of the percentage grades of the subjects
+    :return: The path where the image file of the radar graph is stored relative to static/
+    """
+    matplotlib.use("agg")
+    circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
+    closed_circle = circle.copy()
+    closed_circle.append(0)
+    percs.append(percs[0])
+    ax = plt.subplot(polar=True)
+    plt.xticks(circle, subjects)
+    plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"])
+    plt.ylim(0, 100)
+    theta = np.linspace(0, 2 * np.pi, 100)
+    ax.plot(theta, [60] * len(theta), color="red", alpha=0.3, linewidth=1.5)
+    ax.plot(closed_circle, percs, color="black")
+    ax.fill(closed_circle, percs, alpha=0.2, color="blue")
+    id = str(random.randint(0, 1000000))
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"))
+    plt.close()
+    return f"gen/{id}.png"
+
+
 def new_task_predict(raw_score, max_score, current_overall, task_num, local_avg, grades, category):
     """
     This function simulates the score change in a given category as well as the change in overall score of the subject when a new task is added.
