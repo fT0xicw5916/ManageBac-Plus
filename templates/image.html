@@ -19,6 +19,9 @@
 
             <h1 style="font-size: 70px;">{{ title }}</h1>
             <img src="{{ url_for('static', filename=src) }}">
+            {% if src2 is not none %}
+            <img src="{{ url_for('static', filename=src2) }}">
+            {% endif %}
 
         </div>
 
