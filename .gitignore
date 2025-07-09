@@ -119,3 +119,4 @@ instance/*
 
 .idea/
 files/
+static/gen/
