@@ -5,7 +5,7 @@ from dbm.credentials import Credentials
 from dbm.scores import Scores
 from dbm.mochi import Mochi
 from dbm.notebooks import Notebooks
-from functionals.grades import new_task_predict
+from functionals.grades import new_task_predict, radar_ranks, perc2rank, radar_percs
 from functionals.files import allowed_file
 from werkzeug.utils import secure_filename
 import os
@@ -21,6 +21,18 @@ handler.setFormatter(logging.Formatter("[%(levelname)s] %(asctime)s - %(name)s -
 app.logger.handlers.clear()
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.DEBUG)
+
+
+@app.route("/radar")
+def radar():
+    # Since /radar is from /grades, safe to assume that grades data is cached
+    g = get_grade_data(request.cookies.get("username"))
+    subjects = [i["class_name"] for i in g]
+    ranks = [perc2rank(i["grades"][0][1]) for i in g]
+    percs = [i["grades"][0][1] for i in g]
+    src = radar_ranks(subjects, ranks)
+    src2 = radar_percs(subjects, percs)
+    return render_template("image.html", page_title="Radar Graphs", prev_href="/grades", prev="Grades", title="Radar Graphs", src=src, src2=src2)
 
 
 @app.route("/projects")
