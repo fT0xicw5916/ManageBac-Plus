@@ -294,6 +294,10 @@ def root():
 def tick():
     os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
 
+    credentials = Credentials()
+    for i in credentials.browse():
+        cache_grade_data(i[0], i[1], i[2])
+
     app.logger.info("Tick")
     time.sleep(86400)
 
