@@ -34,6 +34,7 @@ def radar():
     percs = [i["grades"][0][1] for i in g]
     src = radar_ranks(subjects, ranks)
     src2 = radar_percs(subjects, percs)
+    app.logger.info(f"Radar graph at {src} and {src2}")
     return render_template("image.html", page_title="Radar Graphs", prev_href="/grades", prev="Grades", title="Radar Graphs", src=src, src2=src2)
 
 
@@ -293,6 +294,7 @@ def root():
 def tick():
     os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
 
+    app.logger.info("Tick")
     time.sleep(86400)
 
 
