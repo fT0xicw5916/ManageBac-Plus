@@ -20,7 +20,10 @@ Just a simple Python Flask webapp built around ManageBac that adds a lot of usef
 - GPA calculator for midterms and finals
 - GPA calculator for marginal tasks (One extra task in a given category)
 - Graphs for all those calculations
+- Radar graph generation with respect to multiple subjects
+- Personal projects gallery
 - An online platform for sharing Mochi decks as well as notebooks
+- ... and much more!
 
 ## Usage
 ### Prerequisites
@@ -62,4 +65,5 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Finish GPA trend graph generation (DIFFICULT)
 - Remove/Modulize repeating/useless code
 - Automatic clean image cache in static/gen
+- GPA database update once every 24 hours
 - All kinds of encryptions for the credentials database (Hashing?)
