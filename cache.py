@@ -1,6 +1,7 @@
 from selen import ManagebacDriver
 from dbm.credentials import Credentials
 from dbm.scores import Scores
+import logging
 
 
 def get_grade_data(username):
@@ -28,6 +29,9 @@ def get_grade_data(username):
 
 
 def cache_grade_data(username, password, microsoft):
+    logger = logging.getLogger("app.cache")
+    logger.info(f"Caching GPA data for ({username}, {password}, {"MS" if microsoft else "MB"})...")
+
     driver = ManagebacDriver(username, password, microsoft=microsoft)
     g = driver.get_grades()
     driver.terminate()
@@ -46,7 +50,7 @@ def cache_grade_data(username, password, microsoft):
                     continue
                 w.append(k[0])
             scores.new_class(i["class_name"], w)
-    credentials.new(username, password, classes)
+    credentials.new(username, password, microsoft, classes)
 
     # New score entry
     id = credentials.search(username)[-1][0]
@@ -56,4 +60,5 @@ def cache_grade_data(username, password, microsoft):
             s.append(k[1])
         scores.new_score(id, i["class_name"], s)
 
+    logger.info("Cache complete.")
     return g
