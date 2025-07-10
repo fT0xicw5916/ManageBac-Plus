@@ -11,7 +11,7 @@ def get_grade_data(username):
 
     data = credentials.search(username)[-1]
     id = data[0]
-    for class_ in data[3:]:
+    for class_ in data[4:]:
         s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[-1][1:]]
         n = [i[0] for i in scores.get_weight_names(class_)[1:]]
         w = []
