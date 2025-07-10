@@ -11,6 +11,8 @@ from werkzeug.utils import secure_filename
 import os
 import sys
 import logging
+import time
+import multiprocessing
 
 app = Flask("app")
 app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
@@ -288,10 +290,19 @@ def root():
     return render_template("index.html", name=l[0][2:])
 
 
+def tick():
+    os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
+
+    time.sleep(86400)
+
+
 if __name__ == "__main__":
     Credentials.reset()
     Scores.reset()
     Mochi.reset()
     Notebooks.reset()
+
+    t = multiprocessing.Process(target=tick)
+    t.start()
 
     app.run(host="0.0.0.0", port=8080, debug=True)
