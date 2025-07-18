@@ -101,7 +101,7 @@ def toolbox_sub(sub):
             # return render_template("image.html", prev_href="/toolbox/trend", prev="Trend Graphs", title="Trend Graph", src=src)
 
     app.logger.error(f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}")
-    return None
+    return f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}"
 
 
 @app.route("/download/<sub>")
@@ -137,7 +137,7 @@ def upload(sub):
 
             else:
                 app.logger.error(f"Illegal upload requested at /upload/{sub}: {file.filename}")
-                return None
+                return f"Illegal upload requested at /upload/{sub}: {file.filename}"
 
     elif sub == "notebooks":
         if request.method == "GET":
@@ -159,10 +159,10 @@ def upload(sub):
 
             else:
                 app.logger.error(f"Illegal upload requested at /upload/{sub}: {file.filename}")
-                return None
+                return f"Illegal upload requested at /upload/{sub}: {file.filename}"
 
     app.logger.error(f"Subdomain out of range at /upload/<sub>; requested /upload/{sub}")
-    return None
+    return f"Subdomain out of range at /upload/<sub>; requested /upload/{sub}"
 
 
 @app.route("/tasks", methods=["POST", "GET"])
@@ -170,7 +170,7 @@ def tasks():
     subject = request.args.get("subject")
     if subject is None:
         app.logger.error("No subject specified at /tasks")
-        return None
+        return "No subject specified at /tasks"
 
     # Since /tasks is redirected from /grades, we can assume the grades data is cached
     if request.method == "GET":
@@ -210,7 +210,7 @@ def tasks():
         return render_template("tasks_calc.html", origin=subject, category=category, new_raw_score=new_raw_score, new_max_score=new_max_score, new_overall=new_overall, delta_overall=delta_overall, new_local_avg=new_local_avg, delta_local=delta_local)
 
     app.logger.error("Unknown request method at /tasks")
-    return None
+    return "Unknown request method at /tasks"
 
 
 @app.route("/settings", methods=["POST", "GET"])
@@ -237,7 +237,7 @@ def settings():
             return res
 
     app.logger.error("Unknown request method at /settings")
-    return None
+    return "Unknown request method at /settings"
 
 
 @app.route("/grades", methods=["POST", "GET"])
@@ -278,7 +278,7 @@ def grades():
         return render_template("grades_calc.html", result=f"{result:0.3f}", target=target, term=term, subject=subject, overall=overall)
 
     app.logger.error("Unknown request method at /grades")
-    return None
+    return "Unknown request method at /grades"
 
 
 @app.route('/')
