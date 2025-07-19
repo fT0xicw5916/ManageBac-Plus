@@ -1,8 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
 import time
 import logging
 
@@ -31,15 +30,11 @@ class ManagebacDriver:
         self.driver.get("https://huijia.managebac.cn/login")
         if microsoft:
             self.driver.find_element(By.ID, "microsoft").click()
-            usr = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "i0116")))
-            usr.send_keys(username)
-            self.driver.find_element(By.ID, "idSIButton9").click()
-            pwd = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "i0118")))
-            pwd.send_keys(password)
-            time.sleep(3)
-            self.driver.find_element(By.ID, "idSIButton9").click()
-            time.sleep(3)
-            self.driver.find_element(By.ID, "idBtn_Back").click()
+            self.__send_keys_stale_element_by_id("i0116", username)
+            self.__click_stale_element_by_id("idSIButton9")
+            self.__send_keys_stale_element_by_id("i0118", password)
+            self.__click_stale_element_by_id("idSIButton9")
+            self.__click_stale_element_by_id("idBtn_Back")
             time.sleep(5)
         else:
             box_usr = self.driver.find_element(By.ID, "session_login")
@@ -50,7 +45,24 @@ class ManagebacDriver:
             btn_log.click()
         self.logger.info(f"Login success (Username = '{username}', Password = '{password}', {"MS" if microsoft else "MB"})")
 
+    def __send_keys_stale_element_by_id(self, id, v):
+        while True:
+            try:
+                self.driver.find_element(By.ID, id).send_keys(v)
+                break
+            except (StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException):
+                pass
+
+    def __click_stale_element_by_id(self, id):
+        while True:
+            try:
+                self.driver.find_element(By.ID, id).click()
+                break
+            except (StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException):
+                pass
+
     def get_past_tasks(self, subject):
+        # TODO
         self.driver.get("https://huijia.managebac.cn/student")
 
         unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]

@@ -59,11 +59,9 @@ Just to name a few. However, we are also actively working on finding solutions t
 
 ## TODOs
 - Update frontend design, better user guidance in general
-- Microsoft login stale element find a better waiting method other than time.sleep()
-- Fuzzy searching system (Currently only exact search)
 - Simply use GET requests for GPA data
+- Styles for radar graph
+- Curving calculator for teachers
+- WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
-- Remove/Modulize repeating/useless code
-- Automatic clean image cache in static/gen
-- GPA database update once every 24 hours
 - All kinds of encryptions for the credentials database (Hashing?)
