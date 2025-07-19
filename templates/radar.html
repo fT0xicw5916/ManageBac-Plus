@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>ManageBac Plus | {{ page_title }}</title>
+        <title>ManageBac Plus | Radar Graphs</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
@@ -14,15 +14,16 @@
             <h5><a href="/">Home</a></h5>
             <br>
 
-            <h2><a href="{{ prev_href }}">{{ prev }}</a></h2>
+            <h2><a href="/grades">Grades</a></h2>
             <br>
 
-            <h1 style="font-size: 70px;">{{ title }}</h1>
-            <img src="{{ url_for('static', filename=src) }}">
-            {% if src2 is not none %}
+            <h1 style="font-size: 70px;">Radar Graphs</h1>
+            <select id="style" onchange="changeStyle();">
+                <option value="rank" selected>Rank</option>
+                <option value="percentage">Percentage</option>
+            </select>
             <br>
-            <img src="{{ url_for('static', filename=src2) }}">
-            {% endif %}
+            <img src="{{ url_for('static', filename=src) }}" id="graph">
 
         </div>
 
@@ -33,6 +34,17 @@
         <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/util.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script type="text/javascript">
+            function changeStyle() {
+                var style = document.getElementById("style");
+                var styleValue = style.options[style.selectedIndex].value;
+                if (styleValue == "rank") {
+                    document.getElementById("graph").src = "{{ url_for('static', filename=src) }}";
+                } else if (styleValue == "percentage") {
+                    document.getElementById("graph").src = "{{ url_for('static', filename=src2) }}";
+                }
+            }
+        </script>
     </body>
 </html>
 

@@ -35,7 +35,7 @@ def radar():
     src = radar_ranks(subjects, ranks)
     src2 = radar_percs(subjects, percs)
     app.logger.info(f"Radar graph at {src} and {src2}")
-    return render_template("image.html", page_title="Radar Graphs", prev_href="/grades", prev="Grades", title="Radar Graphs", src=src, src2=src2)
+    return render_template("radar.html", src=src, src2=src2)
 
 
 @app.route("/projects")
@@ -84,7 +84,7 @@ def toolbox_sub(sub):
 
             # trend = []
             # for name, score in past_tasks.items():
-            # return render_template("image.html", prev_href="/toolbox/trend", prev="Trend Graphs", title="Trend Graph", src=src)
+            # return render_template("radar.html", prev_href="/toolbox/trend", prev="Trend Graphs", title="Trend Graph", src=src)
 
     app.logger.error(f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}")
     return f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}"
