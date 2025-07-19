@@ -13,14 +13,6 @@ class Mochi:
         self.logger.info(f"New mochi entry created with '{command}'")
         self.cur.execute(command)
 
-    def search_by_name(self, name):
-        self.cur.execute(f"SELECT * FROM mochi WHERE name = \"{name}\";")
-        return self.cur.fetchall()
-
-    def search_by_author(self, author):
-        self.cur.execute(f"SELECT * FROM mochi WHERE author = \"{author}\";")
-        return self.cur.fetchall()
-
     def browse(self):
         self.cur.execute("SELECT * FROM mochi;")
         return self.cur.fetchall()

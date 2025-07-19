@@ -13,14 +13,6 @@ class Notebooks:
         self.logger.info(f"New notebooks entry created with '{command}'")
         self.cur.execute(command)
 
-    def search_by_name(self, name):
-        self.cur.execute(f"SELECT * FROM notebooks WHERE name = \"{name}\";")
-        return self.cur.fetchall()
-
-    def search_by_author(self, author):
-        self.cur.execute(f"SELECT * FROM notebooks WHERE author = \"{author}\";")
-        return self.cur.fetchall()
-
     def browse(self):
         self.cur.execute("SELECT * FROM notebooks;")
         return self.cur.fetchall()
