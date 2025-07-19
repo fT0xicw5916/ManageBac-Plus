@@ -42,7 +42,7 @@ def radar_ranks(subjects, ranks):
     ax.fill(closed_circle, ranks, alpha=0.2, color="blue")
     id = str(random.randint(0, 1000000))
     os.system(f"rm -rf {os.path.abspath("static/gen/" + id + ".png")}")
-    plt.savefig(os.path.abspath("static/gen/" + id + ".png"))
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png")
     plt.close()
     return f"gen/{id}.png"
 
@@ -72,7 +72,7 @@ def radar_percs(subjects, percs):
     ax.fill(closed_circle, percs, alpha=0.2, color="blue")
     id = str(random.randint(0, 1000000))
     os.system(f"rm -rf {os.path.abspath("static/gen/" + id + ".png")}")
-    plt.savefig(os.path.abspath("static/gen/" + id + ".png"))
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png")
     plt.close()
     return f"gen/{id}.png"
 
