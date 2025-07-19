@@ -22,7 +22,7 @@ class Mochi:
         return self.cur.fetchall()
 
     def browse(self):
-        self.cur.execute("SELECT * FROM mochi LIMIT 30;")
+        self.cur.execute("SELECT * FROM mochi;")
         return self.cur.fetchall()
 
     @staticmethod

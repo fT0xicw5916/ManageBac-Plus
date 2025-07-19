@@ -22,7 +22,7 @@ class Notebooks:
         return self.cur.fetchall()
 
     def browse(self):
-        self.cur.execute("SELECT * FROM notebooks LIMIT 30;")
+        self.cur.execute("SELECT * FROM notebooks;")
         return self.cur.fetchall()
 
     @staticmethod
