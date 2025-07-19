@@ -48,30 +48,16 @@ def toolbox():
     return render_template("toolbox.html")
 
 
-@app.route("/toolbox/<sub>", methods=["POST", "GET"])
+@app.route("/toolbox/<sub>")
 def toolbox_sub(sub):
     if sub == "mochi":
         mochi = Mochi()
-        decks = None
-        if request.method == "GET":
-            decks = mochi.browse()
-        elif request.method == "POST":
-            if request.form.get("method") == "name":
-                decks = mochi.search_by_name(request.form.get("search"))
-            elif request.form.get("method") == "author":
-                decks = mochi.search_by_author(request.form.get("search"))
+        decks = mochi.browse()
         return render_template("mochi.html", decks=decks)
 
     elif sub == "notebooks":
         notebooks = Notebooks()
-        l = None
-        if request.method == "GET":
-            l = notebooks.browse()
-        elif request.method == "POST":
-            if request.form.get("method") == "name":
-                l = notebooks.search_by_name(request.form.get("search"))
-            elif request.form.get("method") == "author":
-                l = notebooks.search_by_author(request.form.get("search"))
+        l = notebooks.browse()
         return render_template("notebooks.html", notebooks=l)
 
     # elif sub == "trend":
