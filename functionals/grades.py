@@ -3,6 +3,48 @@ import numpy as np
 import random
 import matplotlib
 import os
+import sys
+
+sys.path.insert(0, "..")
+
+from enums import Colors
+
+
+def radar_ranks_edge(subjects, ranks):
+    matplotlib.use("agg")
+
+    circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
+    closed_circle = circle.copy()
+    closed_circle.append(0)
+
+    ax = plt.subplot(polar=True)
+    plt.xticks(circle, [''] * len(subjects))
+    plt.yticks([0, 1, 2, 3, 4, 5, 6, 7], ['0', '1', '2', '3', '4', '5', '6', '7'])
+    plt.ylim(0, 7)
+
+    theta = np.linspace(0, 2 * np.pi, 100)
+    ax.plot(theta, [3] * len(theta), color=Colors.RED.value, alpha=0.3, linewidth=1.5)
+
+    lax = []
+    for i in range(len(subjects)):
+        r = [0] * len(subjects)
+        try:
+            r[i], r[i+1] = ranks[i], ranks[i]
+        except IndexError:
+            r[i], r[0] = ranks[i], ranks[i]
+        r.append(r[0])
+        l, = ax.plot(closed_circle, r, color=Colors.tolist()[i])
+        lax.append(l)
+        ax.fill(closed_circle, r, alpha=0.3, color=Colors.tolist()[i])
+
+    ax.legend(handles=lax, labels=subjects, loc=3, bbox_to_anchor=(0, 0, 1, 1))
+
+    id = str(random.randint(0, 1000000))
+    os.system(f"rm -rf {os.path.abspath("static/gen/" + id + ".png")}")
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png")
+    plt.close()
+
+    return f"gen/{id}.png"
 
 
 def perc2rank(value, m=100):
@@ -17,63 +59,77 @@ def perc2rank(value, m=100):
     return 7 if p >= 90 else 6 if p >= 80 else 5 if p >= 70 else 4 if p >= 65 else 3 if p >= 60 else 2 if p >= 40 else 1 if p >= 0 else 0
 
 
-def radar_ranks(subjects, ranks):
+def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE.value):
     """
     Graphs the radar graph of given subjects with respect to their IB ranks.
 
     Credits to Charles Zhang Chuhan.
 
-    :param subjects: A list of the names of the subjects
+    :param color: The color of the radar graph. Defaults to "blue"
+    :param transparent: Whether the saved PNG file is transparent or not. Defaults to False
+    :param subjects: A list of the names of the subjects. Set to None to omit subject labels
     :param ranks: A list of the ranks of the subjects
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
+
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
     closed_circle.append(0)
     ranks.append(ranks[0])
+
     ax = plt.subplot(polar=True)
     plt.xticks(circle, subjects)
     plt.yticks([0, 1, 2, 3, 4, 5, 6, 7], ['0', '1', '2', '3', '4', '5', '6', '7'])
     plt.ylim(0, 7)
+
     theta = np.linspace(0, 2 * np.pi, 100)
-    ax.plot(theta, [3] * len(theta), color="red", alpha=0.3, linewidth=1.5)
-    ax.plot(closed_circle, ranks, color="black")
-    ax.fill(closed_circle, ranks, alpha=0.2, color="blue")
+    ax.plot(theta, [3] * len(theta), color=Colors.RED.value, alpha=0.3, linewidth=1.5)
+    ax.plot(closed_circle, ranks, color=color)
+    ax.fill(closed_circle, ranks, alpha=0.2, color=color)
+
     id = str(random.randint(0, 1000000))
     os.system(f"rm -rf {os.path.abspath("static/gen/" + id + ".png")}")
-    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png")
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png", transparent=transparent)
     plt.close()
+
     return f"gen/{id}.png"
 
 
-def radar_percs(subjects, percs):
+def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE.value):
     """
     Graphs the radar graph of given subjects with respect to their percentage grades.
 
     Credits to Charles Zhang Chuhan.
 
-    :param subjects: A list of the names of the subjects
+    :param color: The color of the radar graph. Defaults to "blue"
+    :param transparent: Whether the saved PNG file is transparent or not. Defaults to False
+    :param subjects: A list of the names of the subjects. Set to None to omit subject labels
     :param percs: A list of the percentage grades of the subjects
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
+
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
     closed_circle.append(0)
     percs.append(percs[0])
+
     ax = plt.subplot(polar=True)
     plt.xticks(circle, subjects)
     plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"])
     plt.ylim(0, 100)
+
     theta = np.linspace(0, 2 * np.pi, 100)
-    ax.plot(theta, [60] * len(theta), color="red", alpha=0.3, linewidth=1.5)
-    ax.plot(closed_circle, percs, color="black")
-    ax.fill(closed_circle, percs, alpha=0.2, color="blue")
+    ax.plot(theta, [60] * len(theta), color=Colors.RED.value, alpha=0.3, linewidth=1.5)
+    ax.plot(closed_circle, percs, color=color)
+    ax.fill(closed_circle, percs, alpha=0.2, color=color)
+
     id = str(random.randint(0, 1000000))
     os.system(f"rm -rf {os.path.abspath("static/gen/" + id + ".png")}")
-    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png")
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png", transparent=transparent)
     plt.close()
+
     return f"gen/{id}.png"
 
 
