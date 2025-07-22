@@ -60,7 +60,7 @@ Just to name a few. However, we are also actively working on finding solutions t
 ## TODOs
 - Update frontend design, better user guidance in general
 - Simply use GET requests for GPA data
-- Styles for radar graph
+- Loading screen
 - Curving calculator for teachers
 - WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
