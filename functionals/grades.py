@@ -23,7 +23,7 @@ def radar_ranks_edge(subjects, ranks):
     plt.ylim(0, 7)
 
     theta = np.linspace(0, 2 * np.pi, 100)
-    ax.plot(theta, [3] * len(theta), color=Colors.RED.value, alpha=0.3, linewidth=1.5)
+    ax.plot(theta, [3] * len(theta), color=Colors.RED, alpha=0.3, linewidth=1.5)
 
     lax = []
     for i in range(len(subjects)):
@@ -59,7 +59,7 @@ def perc2rank(value, m=100):
     return 7 if p >= 90 else 6 if p >= 80 else 5 if p >= 70 else 4 if p >= 65 else 3 if p >= 60 else 2 if p >= 40 else 1 if p >= 0 else 0
 
 
-def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE.value):
+def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE):
     """
     Graphs the radar graph of given subjects with respect to their IB ranks.
 
@@ -84,7 +84,7 @@ def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE.value):
     plt.ylim(0, 7)
 
     theta = np.linspace(0, 2 * np.pi, 100)
-    ax.plot(theta, [3] * len(theta), color=Colors.RED.value, alpha=0.3, linewidth=1.5)
+    ax.plot(theta, [3] * len(theta), color=Colors.RED, alpha=0.3, linewidth=1.5)
     ax.plot(closed_circle, ranks, color=color)
     ax.fill(closed_circle, ranks, alpha=0.2, color=color)
 
@@ -96,7 +96,7 @@ def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE.value):
     return f"gen/{id}.png"
 
 
-def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE.value):
+def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE):
     """
     Graphs the radar graph of given subjects with respect to their percentage grades.
 
@@ -121,7 +121,7 @@ def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE.value):
     plt.ylim(0, 100)
 
     theta = np.linspace(0, 2 * np.pi, 100)
-    ax.plot(theta, [60] * len(theta), color=Colors.RED.value, alpha=0.3, linewidth=1.5)
+    ax.plot(theta, [60] * len(theta), color=Colors.RED, alpha=0.3, linewidth=1.5)
     ax.plot(closed_circle, percs, color=color)
     ax.fill(closed_circle, percs, alpha=0.2, color=color)
 

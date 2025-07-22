@@ -1,14 +1,13 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ExtendedEnum(Enum):
+class ExtendedStrEnum(StrEnum):
     @classmethod
     def tolist(cls):
-        return [c.value for c in cls]
-        # return list(map(lambda c: c.value, cls))
+        return [c for c in cls]
 
 
-class Colors(ExtendedEnum):
+class Colors(ExtendedStrEnum):
     BLACK   = "black"
     # BROWN   = "brown"
     RED     = "red"
