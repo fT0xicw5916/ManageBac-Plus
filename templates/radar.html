@@ -22,6 +22,7 @@
                 <option value="rank" selected>Rank</option>
                 <option value="percentage">Percentage</option>
                 <option value="rank2">Rank 2</option>
+                <option value="percentage2">Percentage 2</option>
             </select>
             <br>
             <img src="{{ url_for('static', filename=src) }}" id="graph" width="700">
@@ -45,6 +46,8 @@
                     document.getElementById("graph").src = "{{ url_for('static', filename=src2) }}";
                 } else if (styleValue == "rank2") {
                     document.getElementById("graph").src = "{{ url_for('static', filename=src3) }}";
+                } else if (styleValue == "percentage2") {
+                    document.getElementById("graph").src = "{{ url_for('static', filename=src4) }}";
                 }
             }
         </script>

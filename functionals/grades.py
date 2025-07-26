@@ -10,6 +10,43 @@ sys.path.insert(0, "..")
 from enums import Colors
 
 
+def radar_percs_edge(subjects, percs):
+    matplotlib.use("agg")
+
+    circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
+    closed_circle = circle.copy()
+    closed_circle.append(0)
+
+    ax = plt.subplot(polar=True)
+    plt.xticks(circle, [''] * len(subjects))
+    plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"])
+    plt.ylim(0, 100)
+
+    theta = np.linspace(0, 2 * np.pi, 100)
+    ax.plot(theta, [60] * len(theta), color=Colors.RED, alpha=0.3, linewidth=1.5)
+
+    lax = []
+    for i in range(len(subjects)):
+        r = [0] * len(subjects)
+        try:
+            r[i], r[i+1] = percs[i], percs[i]
+        except IndexError:  # Wrap around
+            r[i], r[0] = percs[i], percs[i]
+        r.append(r[0])
+        l, = ax.plot(closed_circle, r, color=Colors.tolist()[i])
+        lax.append(l)
+        ax.fill(closed_circle, r, alpha=0.3, color=Colors.tolist()[i])
+
+    ax.legend(handles=lax, labels=subjects, loc=3, bbox_to_anchor=(0, 0, 1, 1))
+
+    id = str(random.randint(0, 1000000))
+    os.system(f"rm -rf {os.path.abspath("static/gen/" + id + ".png")}")
+    plt.savefig(os.path.abspath("static/gen/" + id + ".png"), dpi=300, format="png")
+    plt.close()
+
+    return f"gen/{id}.png"
+
+
 def radar_ranks_edge(subjects, ranks):
     matplotlib.use("agg")
 
@@ -30,7 +67,7 @@ def radar_ranks_edge(subjects, ranks):
         r = [0] * len(subjects)
         try:
             r[i], r[i+1] = ranks[i], ranks[i]
-        except IndexError:
+        except IndexError:  # Wrap around
             r[i], r[0] = ranks[i], ranks[i]
         r.append(r[0])
         l, = ax.plot(closed_circle, r, color=Colors.tolist()[i])

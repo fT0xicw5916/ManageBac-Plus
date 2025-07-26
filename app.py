@@ -5,7 +5,7 @@ from dbm.credentials import Credentials
 from dbm.scores import Scores
 from dbm.mochi import Mochi
 from dbm.notebooks import Notebooks
-from functionals.grades import new_task_predict, radar_ranks, perc2rank, radar_percs, radar_ranks_edge
+from functionals.grades import new_task_predict, radar_ranks, perc2rank, radar_percs, radar_ranks_edge, radar_percs_edge
 from functionals.files import allowed_file
 from werkzeug.utils import secure_filename
 import os
@@ -35,8 +35,9 @@ def radar():
     src = radar_ranks(subjects, ranks)
     src2 = radar_percs(subjects, percs)
     src3 = radar_ranks_edge(subjects, ranks)
-    app.logger.info(f"Radar graph at {src}, {src2}, {src3}")
-    return render_template("radar.html", src=src, src2=src2, src3=src3)
+    src4 = radar_percs_edge(subjects, percs)
+    app.logger.info(f"Radar graph at {src}, {src2}, {src3}, {src4}")
+    return render_template("radar.html", src=src, src2=src2, src3=src3, src4=src4)
 
 
 @app.route("/projects")
