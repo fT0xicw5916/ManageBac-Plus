@@ -10,7 +10,25 @@ sys.path.insert(0, "..")
 from enums import Colors
 
 
+def shorter_names(x):
+    """
+    Shortens the name of the given subject for the sake of displaying them on the legend of GPA graphs.
+
+    :param x: The original, full name of the subject
+    :return: The shortened name of the given subject
+    """
+    # TODO
+    return x
+
+
 def radar_percs_edge(subjects, percs):
+    """
+    Graphs the radar graph of given subjects with respect to their percentage grades, using the positions of arcs as the GPA indicator instead of vertices.
+
+    :param subjects: A list of the names of the subjects
+    :param percs: A list of the percentage grades of the subjects
+    :return: The path where the image file of the radar graph is stored relative to static/
+    """
     matplotlib.use("agg")
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
@@ -19,7 +37,7 @@ def radar_percs_edge(subjects, percs):
 
     ax = plt.subplot(polar=True)
     plt.xticks(circle, [''] * len(subjects))
-    plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"])
+    plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"], fontsize=5)
     plt.ylim(0, 100)
 
     theta = np.linspace(0, 2 * np.pi, 100)
@@ -27,15 +45,17 @@ def radar_percs_edge(subjects, percs):
 
     lax = []
     for i in range(len(subjects)):
-        r = [0] * len(subjects)
+        s = np.linspace(0, 2 * np.pi, 100 * len(subjects))
+        r = [0] * 100 * len(subjects)
         try:
-            r[i], r[i+1] = percs[i], percs[i]
+            bounds = (i * 100, (i + 1) * 100)
+            r[bounds[0] : bounds[1]] = [percs[i]] * (bounds[1] - bounds[0])
         except IndexError:  # Wrap around
-            r[i], r[0] = percs[i], percs[i]
-        r.append(r[0])
-        l, = ax.plot(closed_circle, r, color=Colors.tolist()[i])
+            bounds = (0, i * 100)
+            r[bounds[0] : bounds[1]] = [percs[i]] * (bounds[1] - bounds[0])
+        l, = ax.plot(s, r, color=Colors.tolist()[i])
         lax.append(l)
-        ax.fill(closed_circle, r, alpha=0.3, color=Colors.tolist()[i])
+        ax.fill(s, r, alpha=0.3, color=Colors.tolist()[i])
 
     ax.legend(handles=lax, labels=subjects, loc=3, bbox_to_anchor=(0, 0, 1, 1))
 
@@ -48,6 +68,13 @@ def radar_percs_edge(subjects, percs):
 
 
 def radar_ranks_edge(subjects, ranks):
+    """
+    Graphs the radar graph of given subjects with respect to their IB ranks, using the positions of arcs as the GPA indicator instead of vertices.
+
+    :param subjects: A list of the names of the subjects
+    :param ranks: A list of the ranks of the subjects
+    :return: The path where the image file of the radar graph is stored relative to static/
+    """
     matplotlib.use("agg")
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
@@ -64,15 +91,17 @@ def radar_ranks_edge(subjects, ranks):
 
     lax = []
     for i in range(len(subjects)):
-        r = [0] * len(subjects)
+        s = np.linspace(0, 2 * np.pi, 100 * len(subjects))
+        r = [0] * 100 * len(subjects)
         try:
-            r[i], r[i+1] = ranks[i], ranks[i]
+            bounds = (i * 100, (i + 1) * 100)
+            r[bounds[0]: bounds[1]] = [ranks[i]] * (bounds[1] - bounds[0])
         except IndexError:  # Wrap around
-            r[i], r[0] = ranks[i], ranks[i]
-        r.append(r[0])
-        l, = ax.plot(closed_circle, r, color=Colors.tolist()[i])
+            bounds = (0, i * 100)
+            r[bounds[0]: bounds[1]] = [ranks[i]] * (bounds[1] - bounds[0])
+        l, = ax.plot(s, r, color=Colors.tolist()[i])
         lax.append(l)
-        ax.fill(closed_circle, r, alpha=0.3, color=Colors.tolist()[i])
+        ax.fill(s, r, alpha=0.3, color=Colors.tolist()[i])
 
     ax.legend(handles=lax, labels=subjects, loc=3, bbox_to_anchor=(0, 0, 1, 1))
 
@@ -104,7 +133,7 @@ def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE):
 
     :param color: The color of the radar graph. Defaults to "blue"
     :param transparent: Whether the saved PNG file is transparent or not. Defaults to False
-    :param subjects: A list of the names of the subjects. Set to None to omit subject labels
+    :param subjects: A list of the names of the subjects
     :param ranks: A list of the ranks of the subjects
     :return: The path where the image file of the radar graph is stored relative to static/
     """
@@ -141,7 +170,7 @@ def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE):
 
     :param color: The color of the radar graph. Defaults to "blue"
     :param transparent: Whether the saved PNG file is transparent or not. Defaults to False
-    :param subjects: A list of the names of the subjects. Set to None to omit subject labels
+    :param subjects: A list of the names of the subjects
     :param percs: A list of the percentage grades of the subjects
     :return: The path where the image file of the radar graph is stored relative to static/
     """
@@ -154,7 +183,7 @@ def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE):
 
     ax = plt.subplot(polar=True)
     plt.xticks(circle, subjects)
-    plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"])
+    plt.yticks([0, 40, 60, 65, 70, 80, 90], ['0', "40", "60", "65", "70", "80", "90"], fontsize=5)
     plt.ylim(0, 100)
 
     theta = np.linspace(0, 2 * np.pi, 100)

@@ -61,7 +61,7 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Update frontend design, better user guidance in general
 - Simply use GET requests for GPA data
 - Loading screen
-- Curving calculator for teachers
-- WeChat notification for approaching DDLs
+- Curving calculator for teachers (Currently unfeasible)
+- Apple Calendar/WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
 - All kinds of encryptions for the credentials database (Hashing?)
