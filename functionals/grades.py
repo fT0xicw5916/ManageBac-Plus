@@ -30,6 +30,7 @@ def radar_percs_edge(subjects, percs):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
+    subjects = [shorter_names(i) for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -76,6 +77,7 @@ def radar_ranks_edge(subjects, ranks):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
+    subjects = [shorter_names(i) for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -138,6 +140,7 @@ def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
+    subjects = [shorter_names(i) for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -175,6 +178,7 @@ def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
+    subjects = [shorter_names(i) for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
