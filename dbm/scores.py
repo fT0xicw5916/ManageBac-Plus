@@ -1,10 +1,18 @@
 import mysql.connector as C
 import logging
+import os
 
 
 class Scores:
     def __init__(self):
-        self.con = C.connect(database="scores", autocommit=True)
+        db_username = os.environ.get("db_username")
+        db_password = os.environ.get("db_password")
+        db_port = os.environ.get("db_port")
+
+        if db_username is None or db_password is None or db_port is None:
+            self.con = C.connect(database="scores", autocommit=True)
+        else:
+            self.con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=db_port)
         self.cur = self.con.cursor()
         self.logger = logging.getLogger("app.scores")
 
@@ -49,7 +57,14 @@ class Scores:
 
     @staticmethod
     def reset():
-        con = C.connect(database="scores", autocommit=True)
+        db_username = os.environ.get("db_username")
+        db_password = os.environ.get("db_password")
+        db_port = os.environ.get("db_port")
+
+        if db_username is None or db_password is None or db_port is None:
+            con = C.connect(database="scores", autocommit=True)
+        else:
+            con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=db_port)
         cur = con.cursor()
         cur.execute("DROP TABLE IF EXISTS a;")
         cur.execute("DROP TABLE IF EXISTS b;")

@@ -1,10 +1,18 @@
 import mysql.connector as C
 import logging
+import os
 
 
 class Mochi:
     def __init__(self):
-        self.con = C.connect(database="mochi", autocommit=True)
+        db_username = os.environ.get("db_username")
+        db_password = os.environ.get("db_password")
+        db_port = os.environ.get("db_port")
+
+        if db_username is None or db_password is None or db_port is None:
+            self.con = C.connect(database="mochi", autocommit=True)
+        else:
+            self.con = C.connect(database="mochi", autocommit=True, user=db_username, password=db_password, port=db_port)
         self.cur = self.con.cursor()
         self.logger = logging.getLogger("app.mochi")
 
@@ -19,7 +27,14 @@ class Mochi:
 
     @staticmethod
     def reset():
-        con = C.connect(database="mochi", autocommit=True)
+        db_username = os.environ.get("db_username")
+        db_password = os.environ.get("db_password")
+        db_port = os.environ.get("db_port")
+
+        if db_username is None or db_password is None or db_port is None:
+            con = C.connect(database="mochi", autocommit=True)
+        else:
+            con = C.connect(database="mochi", autocommit=True, user=db_username, password=db_password, port=db_port)
         cur = con.cursor()
         cur.execute("DROP TABLE IF EXISTS mochi;")
         cur.execute("CREATE TABLE mochi (name VARCHAR(255), description TEXT, date TIMESTAMP, author VARCHAR(255), url VARCHAR(255));")
