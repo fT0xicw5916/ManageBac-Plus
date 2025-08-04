@@ -18,10 +18,16 @@ app = Flask("app")
 app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
 app.config["UPLOAD_FOLDER"] = os.path.abspath("files")
 
-handler = logging.StreamHandler(sys.stdout)
-handler.setFormatter(logging.Formatter("[%(levelname)s] %(asctime)s - %(name)s - %(message)s"))
+stream_handler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter("[%(levelname)s] %(asctime)s - %(name)s - %(message)s")
+stream_handler.setFormatter(formatter)
+
+file_handler = logging.FileHandler("logs.log")
+file_handler.setFormatter(formatter)
+
 app.logger.handlers.clear()
-app.logger.addHandler(handler)
+app.logger.addHandler(stream_handler)
+app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -291,8 +297,14 @@ def tick():
 
 
 if __name__ == "__main__":
+    os.system("mkdir -p files; cd static; mkdir -p gen")
+
     db_reset = bool(os.environ.get("db_reset", False))
     debug = bool(os.environ.get("debug", False))
+    logs_reset = bool(os.environ.get("logs_reset", True))
+
+    if logs_reset:
+        os.system("rm -rf logs.log")
 
     if db_reset:
         Credentials.reset()

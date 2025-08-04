@@ -52,6 +52,8 @@ In case you have a custom installation/configuration of MySQL, you can specify t
 
 Set `db_reset=1` to reset the databases upon launch and `debug=1` to enable Flask debug mode.
 
+Set `logs_reset=0` to keep the log file from previous sessions instead of deleting it.
+
 ## Current limitations
 We're all just high school students and making perfect dynamic websites is obviously not our daily job. Hence I'll have to admit that there are many limitations to the current website:
 - Lack of encryption for personal credentials
@@ -66,6 +68,14 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Update frontend design, better user guidance in general
 - Simply use GET requests for GPA data
 - Loading screen
+- Change logging file to rotating
+- Uploaded files delete function
+- **[Charles]** Logo design
+- User manual request update GPA data
+- **[Charles]** Chinese translation
+- **[Charles]** Instruction for GPA calculator, radar graphs, task calculator, etc.
+- Uploaded files change name, description, etc.
+- **[Charles]** Upload page acknowledgement (By uploading you make your files free to share, etc.)
 - Curving calculator for teachers (Currently unfeasible)
 - Apple Calendar/WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
