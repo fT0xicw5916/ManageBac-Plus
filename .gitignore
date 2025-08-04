@@ -120,3 +120,4 @@ instance/*
 .idea/
 files/
 static/gen/
+logs.log
