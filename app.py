@@ -299,9 +299,9 @@ def tick():
 if __name__ == "__main__":
     os.system("mkdir -p files; cd static; mkdir -p gen")
 
-    db_reset = bool(os.environ.get("db_reset", False))
-    debug = bool(os.environ.get("debug", False))
-    logs_reset = bool(os.environ.get("logs_reset", True))
+    db_reset = bool(int(os.environ.get("db_reset", False)))
+    debug = bool(int(os.environ.get("debug", False)))
+    logs_reset = bool(int(os.environ.get("logs_reset", True)))
 
     if logs_reset:
         os.system("rm -rf logs.log")
