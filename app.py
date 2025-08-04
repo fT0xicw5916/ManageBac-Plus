@@ -291,12 +291,16 @@ def tick():
 
 
 if __name__ == "__main__":
-    Credentials.reset()
-    Scores.reset()
-    Mochi.reset()
-    Notebooks.reset()
+    db_reset = bool(os.environ.get("db_reset", False))
+    debug = bool(os.environ.get("debug", False))
+
+    if db_reset:
+        Credentials.reset()
+        Scores.reset()
+        Mochi.reset()
+        Notebooks.reset()
 
     t = multiprocessing.Process(target=tick)
     t.start()
 
-    app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host="0.0.0.0", port=80, debug=debug)

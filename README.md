@@ -50,13 +50,15 @@ The app will be deployed at `http://localhost:8080/` and will be open to LAN by 
 ### Parameters
 In case you have a custom installation/configuration of MySQL, you can specify the username, password, and port for MBP to connect to with the environment variables `db_username`, `db_password`, and `db_port` respectively.
 
+Set `db_reset=1` to reset the databases upon launch and `debug=1` to enable Flask debug mode.
+
 ## Current limitations
 We're all just high school students and making perfect dynamic websites is obviously not our daily job. Hence I'll have to admit that there are many limitations to the current website:
 - Lack of encryption for personal credentials
 - Horrible database schema that minimizes efficiency
 - Tons of hidden bugs not fixed
 - Code inconsistency
-- Funding problems for future server deployment
+- Funding problems for future server deployment (SOLVED)
 
 Just to name a few. However, we are also actively working on finding solutions to these problems, and I'm confident that this process won't take long.
 
