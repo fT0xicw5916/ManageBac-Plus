@@ -39,18 +39,19 @@ def cache_grade_data(username, password, microsoft):
     credentials = Credentials()
     scores = Scores()
 
-    # New credential entry
-    classes = []
-    for i in g:
-        classes.append(i["class_name"])
-        if not scores.check_class(i["class_name"]):
-            w = []
-            for k in i["grades"]:
-                if k[0] == "Overall":
-                    continue
-                w.append(k[0])
-            scores.new_class(i["class_name"], w)
-    credentials.new(username, password, microsoft, classes)
+    # New credential entry if credential doesn't exist
+    if len(credentials.search(username)) == 0:
+        classes = []
+        for i in g:
+            classes.append(i["class_name"])
+            if not scores.check_class(i["class_name"]):
+                w = []
+                for k in i["grades"]:
+                    if k[0] == "Overall":
+                        continue
+                    w.append(k[0])
+                scores.new_class(i["class_name"], w)
+        credentials.new(username, password, microsoft, classes)
 
     # New score entry
     id = credentials.search(username)[-1][0]
