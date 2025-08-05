@@ -12,7 +12,7 @@ class Notebooks:
         if db_username is None or db_password is None or db_port is None:
             self.con = C.connect(database="notebooks", autocommit=True)
         else:
-            self.con = C.connect(database="notebooks", autocommit=True, user=db_username, password=db_password, port=db_port)
+            self.con = C.connect(database="notebooks", autocommit=True, user=db_username, password=db_password, port=int(db_port))
         self.cur = self.con.cursor()
         self.logger = logging.getLogger("app.notebooks")
 
@@ -34,7 +34,7 @@ class Notebooks:
         if db_username is None or db_password is None or db_port is None:
             con = C.connect(database="notebooks", autocommit=True)
         else:
-            con = C.connect(database="notebooks", autocommit=True, user=db_username, password=db_password, port=db_port)
+            con = C.connect(database="notebooks", autocommit=True, user=db_username, password=db_password, port=int(db_port))
         cur = con.cursor()
         cur.execute("DROP TABLE IF EXISTS notebooks;")
         cur.execute("CREATE TABLE notebooks (name VARCHAR(255), description TEXT, date TIMESTAMP, author VARCHAR(255), url VARCHAR(255));")

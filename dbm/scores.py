@@ -12,7 +12,7 @@ class Scores:
         if db_username is None or db_password is None or db_port is None:
             self.con = C.connect(database="scores", autocommit=True)
         else:
-            self.con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=db_port)
+            self.con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=int(db_port))
         self.cur = self.con.cursor()
         self.logger = logging.getLogger("app.scores")
 
@@ -64,7 +64,7 @@ class Scores:
         if db_username is None or db_password is None or db_port is None:
             con = C.connect(database="scores", autocommit=True)
         else:
-            con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=db_port)
+            con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=int(db_port))
         cur = con.cursor()
         cur.execute("DROP TABLE IF EXISTS a;")
         cur.execute("DROP TABLE IF EXISTS b;")
