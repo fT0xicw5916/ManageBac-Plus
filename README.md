@@ -46,7 +46,7 @@ To launch the app, make sure you have all the prerequisites installed, then simp
 ```shell
 python app.py
 ```
-The app will be deployed at `http://localhost:8080/` and will be open to LAN by default.
+The app will be deployed at `http://localhost:80/` and will be open to LAN by default.
 ### Parameters
 In case you have a custom installation/configuration of MySQL, you can specify the username, password, and port for MBP to connect to with the environment variables `db_username`, `db_password`, and `db_port` respectively.
 
@@ -67,15 +67,12 @@ Just to name a few. However, we are also actively working on finding solutions t
 ## TODOs
 - Update frontend design, better user guidance in general
 - Simply use GET requests for GPA data
-- Loading screen
 - Change logging file to rotating
 - Uploaded files delete function
 - **[Charles]** Logo design
-- User manual request update GPA data
 - **[Charles]** Chinese translation
-- **[Charles]** Instruction for GPA calculator, radar graphs, task calculator, etc.
+- Optimize /load_grades sleep() time for server bandwidth
 - Uploaded files change name, description, etc.
-- **[Charles]** Upload page acknowledgement (By uploading you make your files free to share, etc.)
 - Curving calculator for teachers (Currently unfeasible)
 - Apple Calendar/WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
