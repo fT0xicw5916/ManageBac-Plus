@@ -13,6 +13,8 @@ import sys
 import logging
 import time
 import multiprocessing
+import threading
+import json
 
 app = Flask("app")
 app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
@@ -234,25 +236,47 @@ def settings():
     return "Unknown request method at /settings"
 
 
+@app.route("/get_cache_grade_data_progress")
+def get_cache_grade_data_progress():
+    progress = {"progress": GLOB_cache_gpa_progress}
+    return json.dumps(progress)
+
+
+def cache_grade_data_wrapper(username, password, microsoft, dest):
+    global GLOB_cache_gpa_progress
+
+    for i in cache_grade_data(username, password, microsoft, dest):
+        GLOB_cache_gpa_progress = i
+
+
+@app.route("/load_grades")
+def load_grades():
+    global GLOB_gpa_data
+    global GLOB_cache_gpa_progress
+
+    username = request.cookies.get("username")
+    password = request.cookies.get("password")
+    if username is None or password is None:
+        return redirect(url_for("settings", next="load_grades"))
+
+    GLOB_gpa_data = None
+    credentials = Credentials()
+
+    if len(credentials.search(username)) > 0:  # Data cached
+        GLOB_gpa_data = get_grade_data(username)
+    else:  # Data not cached
+        GLOB_gpa_data = []
+        GLOB_cache_gpa_progress = 0.
+        c = threading.Thread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), GLOB_gpa_data))
+        c.start()
+
+    return render_template("load_grades.html")
+
+
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
-    global g
-
     if request.method == "GET":
-        username = request.cookies.get("username")
-        password = request.cookies.get("password")
-        if username is None or password is None:
-            return redirect(url_for("settings", next="grades"))
-
-        g = None
-        credentials = Credentials()
-
-        if len(credentials.search(username)) > 0:  # Data cached
-            g = get_grade_data(username)
-        else:  # Data not cached
-            g = cache_grade_data(username, password, int(request.cookies.get("microsoft")))
-
-        return render_template("grades.html", grades=g)
+        return render_template("grades.html", grades=GLOB_gpa_data)
 
     elif request.method == "POST":
         subject = request.form.get("subject")
@@ -261,7 +285,7 @@ def grades():
 
         result = None
         overall = None
-        for s in g:
+        for s in GLOB_gpa_data:
             if s["class_name"] == subject:
                 overall = s["grades"][0][1]
                 if term == "mid":
@@ -286,13 +310,15 @@ def root():
 
 
 def tick():
+    app.logger.info("Tick")
+
     os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
 
     credentials = Credentials()
     for i in credentials.browse():
-        cache_grade_data(i[0], i[1], i[2])
+        cache_grade_data(i[0], i[1], i[2], [])
 
-    app.logger.info("Tick")
+    app.logger.info("Tock")
     time.sleep(86400)
 
 
@@ -311,6 +337,9 @@ if __name__ == "__main__":
         Scores.reset()
         Mochi.reset()
         Notebooks.reset()
+
+    GLOB_cache_gpa_progress = 0.
+    GLOB_gpa_data = []
 
     t = multiprocessing.Process(target=tick)
     t.start()

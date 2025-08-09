@@ -28,13 +28,17 @@ def get_grade_data(username):
     return g
 
 
-def cache_grade_data(username, password, microsoft):
+def cache_grade_data(username, password, microsoft, dest):
     logger = logging.getLogger("app.cache")
     logger.info(f"Caching GPA data for ({username}, {password}, {"MS" if microsoft else "MB"})...")
 
+    yield 0.
     driver = ManagebacDriver(username, password, microsoft=microsoft)
-    g = driver.get_grades()
+    yield 0.1111
+    for i in driver.get_grades(dest):
+        yield i + 0.1111
     driver.terminate()
+    yield -1.
 
     credentials = Credentials()
     scores = Scores()
@@ -42,7 +46,7 @@ def cache_grade_data(username, password, microsoft):
     # New credential entry if credential doesn't exist
     if len(credentials.search(username)) == 0:
         classes = []
-        for i in g:
+        for i in dest:
             classes.append(i["class_name"])
             if not scores.check_class(i["class_name"]):
                 w = []
@@ -55,11 +59,10 @@ def cache_grade_data(username, password, microsoft):
 
     # New score entry
     id = credentials.search(username)[-1][0]
-    for i in g:
+    for i in dest:
         s = []
         for k in i["grades"]:
             s.append(k[1])
         scores.new_score(id, i["class_name"], s)
 
     logger.info("Cache complete.")
-    return g

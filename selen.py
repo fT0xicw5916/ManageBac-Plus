@@ -25,8 +25,8 @@ class ManagebacDriver:
         self.logger = logging.getLogger("app.selen")
 
         self.classes_xpath = "/html/body/div[1]/div[1]/ul/li[4]/ul/*"
-        self.grades_xpath = "/html/body/div/div[2]/aside/div/section[2]/div/*"
-        self.tasks_xpath = "/html/body/div/div[2]/div[2]/div/section/div/div[3]/*"
+        self.grades_xpath = "/html/body/div/main/aside/div/section[2]/div/*"
+        self.tasks_xpath = "/html/body/div/main/div[2]/div/section/div/div[3]/*"
 
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
@@ -137,7 +137,7 @@ class ManagebacDriver:
 
         return task_num
 
-    def get_grades(self, tries=10):
+    def get_grades(self, dest, tries=10):
         self.driver.get("https://huijia.managebac.cn/student")
 
         name_and_urls = []
@@ -154,7 +154,7 @@ class ManagebacDriver:
             if not filtered_out:
                 name_and_urls.append((unfiltered_text, unfiltered_link.get_attribute("href")))
 
-        info_classes = []
+        progress = 0
         for (name, url) in name_and_urls:
             info_dict = {"class_name": name}
 
@@ -188,10 +188,12 @@ class ManagebacDriver:
                 return None
 
             info_dict["grades"] = info_grades
-            info_classes.append(info_dict)
+            dest.append(info_dict)
             self.logger.info(f"Grade hit: {info_dict}")
+            progress += 1
+            yield progress / (len(name_and_urls) + 1)
 
-        return info_classes
+        return None
 
     def terminate(self):
         self.driver.quit()
