@@ -12,7 +12,6 @@ import os
 import sys
 import logging
 import time
-import multiprocessing
 import threading
 import json
 
@@ -262,12 +261,12 @@ def load_grades():
     GLOB_gpa_data = None
     credentials = Credentials()
 
-    if len(credentials.search(username)) > 0:  # Data cached
+    if len(credentials.search(username)) > 0 and int(request.args.get("reload", 0)) == 0:  # Data cached
         GLOB_gpa_data = get_grade_data(username)
-    else:  # Data not cached
+    elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached
         GLOB_gpa_data = []
         GLOB_cache_gpa_progress = 0.
-        c = threading.Thread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), GLOB_gpa_data))
+        c = threading.Thread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), GLOB_gpa_data), daemon=True)
         c.start()
 
     return render_template("load_grades.html")
@@ -341,7 +340,7 @@ if __name__ == "__main__":
     GLOB_cache_gpa_progress = 0.
     GLOB_gpa_data = []
 
-    t = multiprocessing.Process(target=tick)
+    t = threading.Thread(target=tick, daemon=True)
     t.start()
 
     app.run(host="0.0.0.0", port=80, debug=debug)

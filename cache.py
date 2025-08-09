@@ -38,7 +38,7 @@ def cache_grade_data(username, password, microsoft, dest):
     for i in driver.get_grades(dest):
         yield i + 0.1111
     driver.terminate()
-    yield -1.
+    yield 1.
 
     credentials = Credentials()
     scores = Scores()

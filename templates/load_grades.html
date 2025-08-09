@@ -4,12 +4,11 @@
         <title>Loading GPA data...</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+        <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
         <script>
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
-            }
-            function navigate() {
-                window.location.href = "grades";
             }
             async function getProgress() {
                 let get;
@@ -20,15 +19,18 @@
                     } catch(e) {
                         console.error("Error: ", e);
                     }
-                    document.getElementById("load").innerHTML = get.progress;
-                    sleep(250);
-                } while(get.progress != -1.0);
-                navigate();
+                    document.getElementById("bar").style.width = (get.progress * 100) + '%';
+                    document.getElementById("bar").innerHTML = (get.progress * 100) + '%';
+                    await sleep(250);
+                } while(get.progress != 1.0);
+                window.location.href = "grades";
             }
             getProgress();
         </script>
     </head>
     <body>
-        <div id="load"></div>
+        <div id="progress">
+            <div id="bar">0%</div>
+        </div>
     </body>
 </html>
