@@ -262,7 +262,9 @@ def load_grades():
     credentials = Credentials()
 
     if len(credentials.search(username)) > 0 and int(request.args.get("reload", 0)) == 0:  # Data cached
+        GLOB_cache_gpa_progress = 0.
         GLOB_gpa_data = get_grade_data(username)
+        GLOB_cache_gpa_progress = 1.
     elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached
         GLOB_gpa_data = []
         GLOB_cache_gpa_progress = 0.
@@ -315,7 +317,8 @@ def tick():
 
     credentials = Credentials()
     for i in credentials.browse():
-        cache_grade_data(i[0], i[1], i[2], [])
+        for _ in cache_grade_data(i[0], i[1], i[2], []):
+            pass
 
     app.logger.info("Tock")
     time.sleep(86400)
