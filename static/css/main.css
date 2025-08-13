@@ -1708,3 +1708,13 @@ input, select, textarea {
     position: absolute;
     bottom: 100%;
 }
+
+.expand {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .5s ease;
+}
+
+.trigger:hover + .expand, .expand:hover {
+    max-height: 100px;
+}

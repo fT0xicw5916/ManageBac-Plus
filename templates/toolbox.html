@@ -6,6 +6,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
         <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+        <style>
+            #wrapper {
+                justify-content: flex-start;
+            }
+        </style>
     </head>
     <body class="is-preload">
 
@@ -15,10 +20,17 @@
             <br>
 
             <h1 style="font-size: 70px;">Toolbox</h1>
+            <p>Some handy tools</p>
             <br>
 
-            <p style="font-size: 20px;"><a href="/toolbox/mochi">>> Mochi Decks <<</a></p>
-            <p style="font-size: 20px;"><a href="/toolbox/notebooks">>> Notebooks <<</a></p>
+            <p style="font-size: 20px;" class="trigger"><a href="/toolbox/mochi">>> Mochi Decks <<</a></p>
+            <div class="expand">
+                <p>Mochi decks uploaded by various users! You can download and use them freely! <a href="https://mochi.cards/">Get to know about Mochi</a></p>
+            </div>
+            <p style="font-size: 20px;" class="trigger"><a href="/toolbox/notebooks">>> Notebooks <<</a></p>
+            <div class="expand">
+                <p>Class notes and other notes uploaded by various users! Feel free to download and learn or share your own notes!</p>
+            </div>
 <!--            <p style="font-size: 20px;"><a href="/toolbox/trend">Trend Graph</a></p>-->
 
         </div>
