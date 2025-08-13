@@ -1698,3 +1698,13 @@ input, select, textarea {
     line-height: 30px;
     color: white;
 }
+
+.tooltip:hover:after {
+    content: attr(title);
+    display: block;
+    background: rgb(90, 90, 90);
+    padding: 5px 12px;
+    border: solid 1px #ddd;
+    position: absolute;
+    bottom: 100%;
+}
