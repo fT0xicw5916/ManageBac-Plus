@@ -211,7 +211,12 @@ def tasks():
 @app.route("/settings", methods=["POST", "GET"])
 def settings():
     if request.method == "GET":
-        return render_template("settings.html", success=False)
+        username = request.cookies.get("username")
+        password = request.cookies.get("password")
+        microsoft = bool(int(request.cookies.get("microsoft")))
+        if username is not None and password is not None and microsoft is not None:  # Already logged in
+            return render_template("settings.html", success=False, logged_in=True, username=username, password='*'*len(password), microsoft=microsoft)
+        return render_template("settings.html", success=False, logged_in=False)
 
     elif request.method == "POST":
         username = request.form.get("username")
@@ -219,7 +224,7 @@ def settings():
         n = request.args.get("next")
 
         if n is None:
-            res = make_response(render_template("settings.html", success=True))
+            res = make_response(render_template("settings.html", success=True, logged_in=True, username=username, password='*'*len(password), microsoft=True if request.form.get("microsoft") == "microsoft" else False))
             res.set_cookie("username", username)
             res.set_cookie("password", password)
             res.set_cookie("microsoft", "1" if request.form.get("microsoft") == "microsoft" else "0")

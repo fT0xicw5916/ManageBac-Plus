@@ -15,9 +15,27 @@
             <br>
 
             <div style="width: 80%; border: 2px solid white; padding: 100px;">
+                {% if success %}
+                <div class="notification">
+                    <span class="close_notification" onclick="this.parentElement.style.display = 'none';">&times;</span>
+                    Login success!
+                </div>
+                {% endif %}
+
                 <h1 style="font-size: 70px;">Settings</h1>
                 <br>
 
+                {% if logged_in %}
+                <p style="margin: 0 0 0.5rem 0;">You are already logged in!</p>
+                <p style="margin: 0 0 0.5rem 0;">Username: {{ username }}</p>
+                <p style="margin: 0 0 0.5rem 0;">Password: {{ password }}</p>
+                {% if microsoft %}
+                <p>Type: Microsoft</p>
+                {% else %}
+                <p>Type: ManageBac</p>
+                {% endif %}
+                <br>
+                {% endif %}
                 <form method="POST">
                     <input style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" placeholder="Username" type="text" name="username" required>
                     <br>
@@ -29,12 +47,7 @@
                     <input type="checkbox" id="microsoft" name="microsoft" value="microsoft">
                     <label for="microsoft">Login with Microsoft (will take slightly longer)</label>
                 </form>
-                <br>
-                <p>If you failed to log in, double check your managebac account and password and try to select or unselect "log in by microsoft account".</p>
-                {% if success %}
-                <br>
-                <p style="font-size: 30px;">Success!</p>
-                {% endif %}
+                <p style="margin: 0 0 0 0;">If you failed to log in, double-check your ManageBac account and password and try to select or unselect "log in by Microsoft account".</p>
 
             </div>
 
