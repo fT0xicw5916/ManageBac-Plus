@@ -68,11 +68,11 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Update frontend design, better user guidance in general
 - Simply use GET requests for GPA data
 - Change logging file to rotating
-- Uploaded files delete function
+- Uploaded files delete function (Hard, need full account system)
 - **[Charles]** Logo design
-- **[Charles]** Chinese translation
-- Optimize /load_grades sleep() time for server bandwidth
-- Uploaded files change name, description, etc.
+- /grades add rank-based
+- /grades add load GPA history
+- Uploaded files change name, description, etc. (Hard, need full account system)
 - Curving calculator for teachers (Currently unfeasible)
 - Apple Calendar/WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
