@@ -69,7 +69,6 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Simply use GET requests for GPA data
 - Change logging file to rotating
 - Uploaded files delete function (Hard, need full account system)
-- **[Charles]** Logo design
 - /grades add rank-based
 - /grades add load GPA history
 - Uploaded files change name, description, etc. (Hard, need full account system)
