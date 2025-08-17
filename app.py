@@ -213,8 +213,8 @@ def settings():
     if request.method == "GET":
         username = request.cookies.get("username")
         password = request.cookies.get("password")
-        microsoft = bool(int(request.cookies.get("microsoft")))
-        if username is not None and password is not None and microsoft is not None:  # Already logged in
+        if username is not None and password is not None:  # Already logged in
+            microsoft = bool(int(request.cookies.get("microsoft")))
             return render_template("settings.html", success=False, logged_in=True, username=username, password='*'*len(password), microsoft=microsoft)
         return render_template("settings.html", success=False, logged_in=False)
 
