@@ -1726,7 +1726,7 @@ input, select, textarea {
     margin-bottom: 15px;
 }
 
-.close_notification {
+.close-notification {
     margin-left: 15px;
     color: white;
     font-weight: bold;
@@ -1737,6 +1737,6 @@ input, select, textarea {
     transition: 0.3s;
 }
 
-.close_notification:hover {
+.close-notification:hover {
     color: black;
 }
