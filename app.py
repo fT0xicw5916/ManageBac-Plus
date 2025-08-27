@@ -16,6 +16,7 @@ import threading
 import json
 
 app = Flask("app")
+
 app.config["MAX_CONTENT_LENGTH"] = 128 * 1000 * 1000
 app.config["UPLOAD_FOLDER"] = os.path.abspath("files")
 
@@ -242,7 +243,7 @@ def settings():
 
 @app.route("/get_cache_grade_data_progress")
 def get_cache_grade_data_progress():
-    progress = {"progress": GLOB_cache_gpa_progress}
+    progress = {"progress": GLOB_cache_gpa_progress[request.cookies.get("username")]}
     return json.dumps(progress)
 
 
@@ -250,7 +251,7 @@ def cache_grade_data_wrapper(username, password, microsoft, dest):
     global GLOB_cache_gpa_progress
 
     for i in cache_grade_data(username, password, microsoft, dest):
-        GLOB_cache_gpa_progress = i
+        GLOB_cache_gpa_progress[username] = i
 
 
 @app.route("/load_grades")
@@ -263,17 +264,17 @@ def load_grades():
     if username is None or password is None:
         return redirect(url_for("settings", next="load_grades"))
 
-    GLOB_gpa_data = None
+    GLOB_gpa_data[username] = None
     credentials = Credentials()
 
     if len(credentials.search(username)) > 0 and int(request.args.get("reload", 0)) == 0:  # Data cached
-        GLOB_cache_gpa_progress = 0.
-        GLOB_gpa_data = get_grade_data(username)
-        GLOB_cache_gpa_progress = 1.
+        GLOB_cache_gpa_progress[username] = 0.
+        GLOB_gpa_data[username] = get_grade_data(username)
+        GLOB_cache_gpa_progress[username] = 1.
     elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached
-        GLOB_gpa_data = []
-        GLOB_cache_gpa_progress = 0.
-        c = threading.Thread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), GLOB_gpa_data), daemon=True)
+        GLOB_gpa_data[username] = []
+        GLOB_cache_gpa_progress[username] = 0.
+        c = threading.Thread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), GLOB_gpa_data[username]), daemon=True)
         c.start()
 
     return render_template("load_grades.html")
@@ -282,7 +283,7 @@ def load_grades():
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
     if request.method == "GET":
-        return render_template("grades.html", grades=GLOB_gpa_data)
+        return render_template("grades.html", grades=GLOB_gpa_data[request.cookies.get("username")])
 
     elif request.method == "POST":
         subject = request.form.get("subject")
@@ -291,7 +292,7 @@ def grades():
 
         result = None
         overall = None
-        for s in GLOB_gpa_data:
+        for s in GLOB_gpa_data[request.cookies.get("username")]:
             if s["class_name"] == subject:
                 overall = s["grades"][0][1]
                 if term == "mid":
@@ -345,8 +346,8 @@ if __name__ == "__main__":
         Mochi.reset()
         Notebooks.reset()
 
-    GLOB_cache_gpa_progress = 0.
-    GLOB_gpa_data = []
+    GLOB_cache_gpa_progress = {}
+    GLOB_gpa_data = {}
 
     t = threading.Thread(target=tick, daemon=True)
     t.start()
