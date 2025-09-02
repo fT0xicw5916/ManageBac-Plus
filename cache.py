@@ -22,7 +22,7 @@ def get_grade_data(username):
             w.append(int(i[i.find('(') + 1:i.find('%')]))
         g.append({
             "class_name": class_,
-            "grades": list(zip(n, s, w))
+            "grades": [list(entry) for entry in zip(n, s, w)]
         })
 
     return g
