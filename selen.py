@@ -177,7 +177,7 @@ class ManagebacDriver:
                     prop = int(name_with_prop[name_with_prop.find('(')+1:name_with_prop.find('%')]) / 100 if i else None
                     grade = float(text_grade[text_grade.find('(')+1:text_grade.find('%')]) if text_grade != "\n-\n" else None
 
-                    info_grades.append((name_with_prop, grade, prop))
+                    info_grades.append([name_with_prop, grade, prop])
 
                 if len(info_grades) > 0:
                     done = True

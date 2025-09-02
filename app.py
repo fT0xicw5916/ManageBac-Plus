@@ -14,6 +14,7 @@ import logging
 import time
 import threading
 import json
+import copy
 
 app = Flask("app")
 
@@ -283,7 +284,11 @@ def load_grades():
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
     if request.method == "GET":
-        return render_template("grades.html", grades=GLOB_gpa_data[request.cookies.get("username")])
+        ranks = copy.deepcopy(GLOB_gpa_data[request.cookies.get("username")])
+        for sub in ranks:
+            for i in sub["grades"]:
+                i[1] = None if i[1] is None else perc2rank(i[1])
+        return render_template("grades.html", grades=GLOB_gpa_data[request.cookies.get("username")], ranks=ranks, enumerate=enumerate)
 
     elif request.method == "POST":
         subject = request.form.get("subject")

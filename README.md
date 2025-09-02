@@ -69,8 +69,8 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Simply use GET requests for GPA data
 - Change logging file to rotating
 - Uploaded files delete function (Hard, need full account system)
-- /grades add rank-based
 - /grades add load GPA history
+- Log out
 - Uploaded files change name, description, etc. (Hard, need full account system)
 - Curving calculator for teachers (Currently unfeasible)
 - Apple Calendar/WeChat notification for approaching DDLs

@@ -28,17 +28,17 @@
 
             <div class="subjects">
 
-                {% for grade in grades %}
+                {% for i, grade in enumerate(grades) %}
 
                 <div class="subject">
                     <h3><u>{{ grade["class_name"] }}</u></h3>
-                    {% for term in grade["grades"] %}
+                    {% for j, term in enumerate(grade["grades"]) %}
                     {% if term[0] == "Overall" %}
-                    <b style="font-size: 20px;">{{ term[0] }}: {{ term[1] }}</b>
+                    <b style="font-size: 20px;">{{ term[0] }}: {{ term[1] }} ({{ ranks[i]["grades"][j][1] }})</b>
                     <br>
                     <br>
                     {% else %}
-                    <p>{{ term[0] }}: {{ term[1] }}</p>
+                    <p>{{ term[0] }}: {{ term[1] }} ({{ ranks[i]["grades"][j][1] }})</p>
                     {% endif %}
                     {% endfor %}
                     <button><a href="/tasks?subject={{ grade['class_name'] }}">Tasks</a></button>
