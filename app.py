@@ -291,10 +291,11 @@ def grades():
         target = request.form.get("target")
 
         result = None
-        overall = None
+        overall = 0.
         for s in GLOB_gpa_data[request.cookies.get("username")]:
             if s["class_name"] == subject:
                 overall = s["grades"][0][1]
+                overall = 0. if overall is None else overall
                 if term == "mid":
                     result = ((0.7 * float(target)) - (0.5 * overall)) / 0.2
                 elif term == "final":
