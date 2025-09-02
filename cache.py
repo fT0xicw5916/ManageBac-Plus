@@ -34,9 +34,9 @@ def cache_grade_data(username, password, microsoft, dest):
 
     yield 0.
     driver = ManagebacDriver(username, password, microsoft=microsoft)
-    yield 0.1111
+    yield 0.1
     for i in driver.get_grades(dest):
-        yield i + 0.1111
+        yield i + 0.1
     driver.terminate()
     yield 1.
 

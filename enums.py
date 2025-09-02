@@ -16,7 +16,7 @@ class Colors(ExtendedStrEnum):
     # GOLD    = "gold"
     YELLOW  = "yellow"
     GREEN   = "green"
-    # CYAN    = "cyan"
+    CYAN    = "cyan"
     BLUE    = "blue"
     # INDIGO  = "indigo"
     PURPLE  = "purple"

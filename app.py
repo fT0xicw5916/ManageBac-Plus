@@ -38,8 +38,8 @@ def radar():
     # Since /radar is from /grades, safe to assume that grades data is cached
     g = get_grade_data(request.cookies.get("username"))
     subjects = [i["class_name"] for i in g]
-    ranks = [perc2rank(i["grades"][0][1]) for i in g]
-    percs = [i["grades"][0][1] for i in g]
+    ranks = [perc2rank(0. if i["grades"][0][1] is None else i["grades"][0][1]) for i in g]
+    percs = [0. if i["grades"][0][1] is None else i["grades"][0][1] for i in g]
     src = radar_ranks(subjects, ranks)
     src2 = radar_percs(subjects, percs)
     src3 = radar_ranks_edge(subjects, ranks)
