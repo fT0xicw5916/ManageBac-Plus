@@ -46,7 +46,7 @@ class Credentials:
             con = C.connect(database="credentials", autocommit=True, user=db_username, password=db_password, port=int(db_port))
         cur = con.cursor()
         cur.execute("DROP TABLE IF EXISTS credentials;")
-        cur.execute("CREATE TABLE credentials (id int NOT NULL AUTO_INCREMENT, email VARCHAR(255), password VARCHAR(255), microsoft TINYINT, class1 VARCHAR(255), class2 VARCHAR(255), class3 VARCHAR(255), class4 VARCHAR(255), class5 VARCHAR(255), class6 VARCHAR(255), class7 VARCHAR(255), PRIMARY KEY (id));")
+        cur.execute("CREATE TABLE credentials (id int NOT NULL AUTO_INCREMENT, email VARCHAR(255), password VARCHAR(255), microsoft TINYINT, class1 VARCHAR(255), class2 VARCHAR(255), class3 VARCHAR(255), class4 VARCHAR(255), class5 VARCHAR(255), class6 VARCHAR(255), class7 VARCHAR(255), class8 VARCHAR(255), class9 VARCHAR(255), PRIMARY KEY (id));")
         cur.close()
         con.close()
 

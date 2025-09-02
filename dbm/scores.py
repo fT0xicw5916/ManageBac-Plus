@@ -20,7 +20,10 @@ class Scores:
         w = ""
         for weight in weights:
             w += '`' + weight + '`' + " FLOAT(24), "
-        command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});"
+        if w == "":
+            command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24));"
+        else:
+            command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});"
         self.logger.info(f"New class table created with '{command}'")
         self.cur.execute(command)
 
