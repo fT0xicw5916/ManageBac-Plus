@@ -30,6 +30,9 @@
 
                 {% for i, grade in enumerate(grades) %}
 
+                {% if grade is none %}
+                {% else %}
+
                 <div class="subject">
                     <h3><u>{{ grade["class_name"] }}</u></h3>
                     {% for j, term in enumerate(grade["grades"]) %}
@@ -43,6 +46,8 @@
                     {% endfor %}
                     <button><a href="/tasks?subject={{ grade['class_name'] }}">Tasks</a></button>
                 </div>
+
+                {% endif %}
 
                 {% endfor %}
 

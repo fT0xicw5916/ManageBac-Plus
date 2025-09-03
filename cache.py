@@ -12,6 +12,9 @@ def get_grade_data(username):
     data = credentials.search(username)[-1]
     id = data[0]
     for class_ in data[4:]:
+        if class_ == "None":
+            g.append(None)
+            continue
         s = [float(i) if i is not None else None for i in scores.search_score(id, class_)[-1][1:]]
         n = [i[0] for i in scores.get_weight_names(class_)[1:]]
         w = []
@@ -47,6 +50,9 @@ def cache_grade_data(username, password, microsoft, dest):
     if len(credentials.search(username)) == 0:
         classes = []
         for i in dest:
+            if i is None:
+                classes.append("None")
+                continue
             classes.append(i["class_name"])
             if not scores.check_class(i["class_name"]):
                 w = []
@@ -60,6 +66,8 @@ def cache_grade_data(username, password, microsoft, dest):
     # New score entry
     id = credentials.search(username)[-1][0]
     for i in dest:
+        if i is None:
+            continue
         s = []
         for k in i["grades"]:
             s.append(k[1])
