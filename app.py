@@ -286,6 +286,8 @@ def grades():
     if request.method == "GET":
         ranks = copy.deepcopy(GLOB_gpa_data[request.cookies.get("username")])
         for sub in ranks:
+            if sub is None:
+                continue
             for i in sub["grades"]:
                 i[1] = None if i[1] is None else perc2rank(i[1])
         return render_template("grades.html", grades=GLOB_gpa_data[request.cookies.get("username")], ranks=ranks, enumerate=enumerate)
@@ -298,6 +300,8 @@ def grades():
         result = None
         overall = 0.
         for s in GLOB_gpa_data[request.cookies.get("username")]:
+            if s is None:
+                continue
             if s["class_name"] == subject:
                 overall = s["grades"][0][1]
                 overall = 0. if overall is None else overall
