@@ -15,6 +15,7 @@ import time
 import threading
 import json
 import copy
+import redis
 
 app = Flask("app")
 
@@ -32,6 +33,11 @@ app.logger.handlers.clear()
 app.logger.addHandler(stream_handler)
 app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.DEBUG)
+
+GLOB_cache_gpa_progress = {}
+GLOB_gpa_data = {}
+
+R = redis.Redis(connection_pool=redis.ConnectionPool(host="localhost", port=6379, db=0))
 
 
 @app.route("/radar")
@@ -340,11 +346,10 @@ def tick():
     time.sleep(86400)
 
 
-if __name__ == "__main__":
+def init():
     os.system("mkdir -p files; cd static; mkdir -p gen")
 
     db_reset = bool(int(os.environ.get("db_reset", False)))
-    debug = bool(int(os.environ.get("debug", False)))
     logs_reset = bool(int(os.environ.get("logs_reset", True)))
 
     if logs_reset:
@@ -356,10 +361,11 @@ if __name__ == "__main__":
         Mochi.reset()
         Notebooks.reset()
 
-    GLOB_cache_gpa_progress = {}
-    GLOB_gpa_data = {}
-
     t = threading.Thread(target=tick, daemon=True)
     t.start()
 
+
+if __name__ == "__main__":
+    init()
+    debug = bool(int(os.environ.get("debug", False)))
     app.run(host="0.0.0.0", port=80, debug=debug)

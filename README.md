@@ -12,6 +12,7 @@ Just a simple Python Flask webapp built around ManageBac that adds a lot of usef
     * [Prerequisites](#prerequisites)
     * [Launch](#launch)
     * [Parameters](#parameters)
+    * [Deployment](#deployment)
   * [Current limitations](#current-limitations)
   * [TODOs](#todos)
 <!-- TOC -->
@@ -53,6 +54,12 @@ In case you have a custom installation/configuration of MySQL, you can specify t
 Set `db_reset=1` to reset the databases upon launch and `debug=1` to enable Flask debug mode.
 
 Set `logs_reset=0` to keep the log file from previous sessions instead of deleting it.
+### Deployment
+For deployment, MBP uses `gunicorn` by default (included in `requirements.txt`). To deploy, simply run the following command in your terminal:
+```shell
+gunicorn
+```
+The environment variables mentioned above can also be set for deployment.
 
 ## Current limitations
 We're all just high school students and making perfect dynamic websites is obviously not our daily job. Hence I'll have to admit that there are many limitations to the current website:
