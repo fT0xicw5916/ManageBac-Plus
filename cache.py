@@ -2,6 +2,8 @@ from selen import ManagebacDriver
 from dbm.credentials import Credentials
 from dbm.scores import Scores
 import logging
+import threading
+import json
 
 
 def get_grade_data(username):
@@ -29,6 +31,19 @@ def get_grade_data(username):
         })
 
     return g
+
+
+class CacheGradeDataThread(threading.Thread):
+    def __init__(self, target=None, args=(), daemon=None, R=None):
+        super().__init__(target=target, args=args, daemon=daemon)
+        self.R = R
+        self.args = args
+
+    def run(self):
+        super().run()
+        GLOB_gpa_data = json.loads(self.R.get("GLOB_gpa_data"))
+        GLOB_gpa_data[list(self.args)[0]] = list(self.args)[3]
+        self.R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
 
 
 def cache_grade_data(username, password, microsoft, dest):

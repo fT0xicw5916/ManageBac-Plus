@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, make_response, redirect, send_from_directory, url_for
 from selen import ManagebacDriver
-from cache import cache_grade_data, get_grade_data
+from cache import cache_grade_data, get_grade_data, CacheGradeDataThread
 from dbm.credentials import Credentials
 from dbm.scores import Scores
 from dbm.mochi import Mochi
@@ -33,9 +33,6 @@ app.logger.handlers.clear()
 app.logger.addHandler(stream_handler)
 app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.DEBUG)
-
-GLOB_cache_gpa_progress = {}
-GLOB_gpa_data = {}
 
 R = redis.Redis(connection_pool=redis.ConnectionPool(host="localhost", port=6379, db=0))
 
@@ -250,38 +247,51 @@ def settings():
 
 @app.route("/get_cache_grade_data_progress")
 def get_cache_grade_data_progress():
-    progress = {"progress": GLOB_cache_gpa_progress[request.cookies.get("username")]}
+    progress = {"progress": json.loads(R.get("GLOB_cache_gpa_progress"))[request.cookies.get("username")]}
     return json.dumps(progress)
 
 
 def cache_grade_data_wrapper(username, password, microsoft, dest):
-    global GLOB_cache_gpa_progress
-
     for i in cache_grade_data(username, password, microsoft, dest):
+        GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = i
+        R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
 
 
 @app.route("/load_grades")
 def load_grades():
-    global GLOB_gpa_data
-    global GLOB_cache_gpa_progress
-
     username = request.cookies.get("username")
     password = request.cookies.get("password")
     if username is None or password is None:
         return redirect(url_for("settings", next="load_grades"))
 
+    GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
     GLOB_gpa_data[username] = None
+    R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
     credentials = Credentials()
 
     if len(credentials.search(username)) > 0 and int(request.args.get("reload", 0)) == 0:  # Data cached
+        GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 0.
+        R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
+
+        GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
         GLOB_gpa_data[username] = get_grade_data(username)
+        R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
+
+        GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 1.
+        R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
     elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached
+        GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
         GLOB_gpa_data[username] = []
+        R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
+
+        GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 0.
-        c = threading.Thread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), GLOB_gpa_data[username]), daemon=True)
+        R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
+
+        c = CacheGradeDataThread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), json.loads(R.get("GLOB_gpa_data"))[username]), daemon=True, R=R)
         c.start()
 
     return render_template("load_grades.html")
@@ -290,13 +300,13 @@ def load_grades():
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
     if request.method == "GET":
-        ranks = copy.deepcopy(GLOB_gpa_data[request.cookies.get("username")])
+        ranks = copy.deepcopy(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")])
         for sub in ranks:
             if sub is None:
                 continue
             for i in sub["grades"]:
                 i[1] = None if i[1] is None else perc2rank(i[1])
-        return render_template("grades.html", grades=GLOB_gpa_data[request.cookies.get("username")], ranks=ranks, enumerate=enumerate)
+        return render_template("grades.html", grades=json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")], ranks=ranks, enumerate=enumerate)
 
     elif request.method == "POST":
         subject = request.form.get("subject")
@@ -305,7 +315,7 @@ def grades():
 
         result = None
         overall = 0.
-        for s in GLOB_gpa_data[request.cookies.get("username")]:
+        for s in json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]:
             if s is None:
                 continue
             if s["class_name"] == subject:
@@ -348,6 +358,9 @@ def tick():
 
 def init():
     os.system("mkdir -p files; cd static; mkdir -p gen")
+
+    R.set("GLOB_gpa_data", json.dumps({}))
+    R.set("GLOB_cache_gpa_progress", json.dumps({}))
 
     db_reset = bool(int(os.environ.get("db_reset", False)))
     logs_reset = bool(int(os.environ.get("logs_reset", True)))
