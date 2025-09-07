@@ -65,19 +65,12 @@ class Scores:
         db_port = os.environ.get("db_port")
 
         if db_username is None or db_password is None or db_port is None:
-            con = C.connect(database="scores", autocommit=True)
+            con = C.connect(autocommit=True)
         else:
-            con = C.connect(database="scores", autocommit=True, user=db_username, password=db_password, port=int(db_port))
+            con = C.connect(autocommit=True, user=db_username, password=db_password, port=int(db_port))
         cur = con.cursor()
-        cur.execute("DROP TABLE IF EXISTS a;")
-        cur.execute("DROP TABLE IF EXISTS b;")
-        cur.execute("DROP TABLE IF EXISTS credentials;")
-        cur.execute("DROP TABLE IF EXISTS `advanced comprehensive english (grade 10) 5`;")
-        cur.execute("DROP TABLE IF EXISTS `economics honor (grade 10) 1`;")
-        cur.execute("DROP TABLE IF EXISTS `introduction to language and literature (grade 10) 7`;")
-        cur.execute("DROP TABLE IF EXISTS `pe4 (grade 10) 41`;")
-        cur.execute("DROP TABLE IF EXISTS `physics honor (grade 10) 3`;")
-        cur.execute("DROP TABLE IF EXISTS `pre-calculus extended (grade 10) 6`;")
+        cur.execute("DROP DATABASE IF EXISTS scores;")
+        cur.execute("CREATE DATABASE scores;")
         cur.close()
         con.close()
 
