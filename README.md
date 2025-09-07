@@ -57,7 +57,7 @@ Set `logs_reset=0` to keep the log file from previous sessions instead of deleti
 ### Deployment
 For deployment, MBP uses `gunicorn` by default (included in `requirements.txt`). To deploy, simply run the following command in your terminal:
 ```shell
-gunicorn
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES; gunicorn
 ```
 The environment variables mentioned above can also be set for deployment.
 
