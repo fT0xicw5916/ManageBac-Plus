@@ -314,19 +314,21 @@ def grades():
         target = request.form.get("target")
 
         result = None
-        overall = 0.
+        overall = None
+        a = None
         for s in json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]:
             if s is None:
                 continue
             if s["class_name"] == subject:
                 overall = s["grades"][0][1]
                 overall = 0. if overall is None else overall
+                a = sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and idx != 0])
                 if term == "mid":
-                    result = ((0.7 * float(target)) - (0.5 * overall)) / 0.2
+                    result = (((a + 0.2) * float(target)) - (sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and i[0] != "Mid-term Exam (20%)" and idx != 0]) * overall)) / 0.2
                 elif term == "final":
-                    result = (float(target) - (0.7 * overall)) / 0.3
+                    result = (((a + 0.3) * float(target)) - (sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and i[0] != "Final Exam (30%)" and idx != 0]) * overall)) / 0.3
                 break
-        return render_template("grades_calc.html", result=f"{result:0.3f}", target=target, term=term, subject=subject, overall=overall)
+        return render_template("grades_calc.html", result=f"{result:0.3f}", target=target, term=term, subject=subject, overall=overall, a=a)
 
     app.logger.error("Unknown request method at /grades")
     return "Unknown request method at /grades"

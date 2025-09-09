@@ -57,12 +57,12 @@
 
         {% if term == "mid" %}
 
-        calculator.setExpression({ id: "a", latex: "a=0.5", sliderBounds: { min: 0, max: 1, step: 0.01 } });
+        calculator.setExpression({ id: "a", latex: "a={{ a }}", sliderBounds: { min: 0, max: 1, step: 0.01 } });
         calculator.setExpression({ id: "b", latex: "b=0.2", sliderBounds: { min: 0, max: 1, step: 0.01 } });
 
         {% else %}
 
-        calculator.setExpression({ id: "a", latex: "a=0.7", sliderBounds: { min: 0, max: 1, step: 0.01 } });
+        calculator.setExpression({ id: "a", latex: "a={{ a }}", sliderBounds: { min: 0, max: 1, step: 0.01 } });
         calculator.setExpression({ id: "b", latex: "b=0.3", sliderBounds: { min: 0, max: 1, step: 0.01 } });
 
         {% endif %}
