@@ -24,7 +24,7 @@ def get_grade_data(username):
             if i == "Overall":
                 w.append(None)
                 continue
-            w.append(int(i[i.find('(') + 1:i.find('%')]))
+            w.append(int(i[i.find('(') + 1:i.find('%')]) / 100)
         g.append({
             "class_name": class_,
             "grades": [list(entry) for entry in zip(n, s, w)]
