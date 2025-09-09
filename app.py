@@ -8,6 +8,7 @@ from dbm.notebooks import Notebooks
 from functionals.grades import new_task_predict, radar_ranks, perc2rank, radar_percs, radar_ranks_edge, radar_percs_edge
 from functionals.files import allowed_file
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 import sys
 import logging
@@ -33,6 +34,8 @@ app.logger.handlers.clear()
 app.logger.addHandler(stream_handler)
 app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.DEBUG)
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 R = redis.Redis(connection_pool=redis.ConnectionPool(host="localhost", port=6379, db=0))
 
@@ -383,4 +386,4 @@ def init():
 if __name__ == "__main__":
     init()
     debug = bool(int(os.environ.get("debug", False)))
-    app.run(host="0.0.0.0", port=80, debug=debug)
+    app.run(host="0.0.0.0", port=8000, debug=debug)
