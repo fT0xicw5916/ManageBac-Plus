@@ -20,11 +20,9 @@
 
             <h1 style="font-size: 70px;">Notebooks</h1>
             <br>
-            <p>Class notes and other notes uploaded by various users! Feel free to download and learn or share your own notes!</p>
+            <p>Subject notes uploaded by other users! Feel free to download and learn, or share your own notes!</p>
             <br>
-            <p>CAUTION: By uploading your NOTES, they are publicized. This means that they can be viewed and used by anyone! Think twice before you upload your NOTES! Currently there is no way to delete them from our website once uploaded. (we will add such function to delete uploaded resources in later versions)</p>
-            <br>
-            <strong><a href="/upload/notebooks">Upload</a></strong>
+            <strong><a href="/upload/notebooks">>> Upload <<</a></strong>
             <br>
 
             <div class="subjects">
@@ -37,7 +35,7 @@
                     <br>
                     <p><strong>Date uploaded: </strong>{{ notebook[2] }}</p>
                     <p><strong>Author: </strong>{{ notebook[3] }}</p>
-                    <p><a href="/download/{{ notebook[4].split('/')[-1] }}">DOWNLOAD</a></p>
+                    <p><a href="/download/{{ notebook[4].split('/')[-1] }}">>> DOWNLOAD <<</a></p>
                 </div>
 
                 {% endfor %}

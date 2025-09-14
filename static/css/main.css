@@ -1686,7 +1686,7 @@ input, select, textarea {
 }
 
 #progress {
-    width: 100%;
+    width: 80%;
     background-color: #ddd;
 }
 

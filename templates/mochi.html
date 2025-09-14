@@ -20,9 +20,7 @@
 
             <h1 style="font-size: 70px;">Mochi Decks</h1>
             <br>
-            <p>Mochi decks uploaded by various users! You can download and use them freely! <a href="https://mochi.cards/">Get to know about Mochi</a></p>
-            <br>
-            <p>CAUTION: By uploading your mochi deck, they are publicized. This means that they can be viewed and used by anyone! Think twice before you upload your mochi decks! Currently there is no way to delete them from our website once uploaded. (we will add such function to delete uploaded resources in later versions)</p>
+            <p>Mochi decks uploaded by other users! You can download and use them however you want! <a href="https://mochi.cards/">Learn more about Mochi</a></p>
             <br>
             <strong><a href="/upload/mochi">>> Upload <<</a></strong>
             <br>
@@ -37,7 +35,7 @@
                     <br>
                     <p><strong>Date uploaded: </strong>{{ deck[2] }}</p>
                     <p><strong>Author: </strong>{{ deck[3] }}</p>
-                    <p><a href="/download/{{ deck[4].split('/')[-1] }}">DOWNLOAD</a></p>
+                    <p><a href="/download/{{ deck[4].split('/')[-1] }}">>> DOWNLOAD <<</a></p>
                 </div>
 
                 {% endfor %}

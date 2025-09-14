@@ -31,16 +31,19 @@
                 <p style="margin: 0 0 0.5rem 0;">Username: {{ username }}</p>
                 <p style="margin: 0 0 0.5rem 0;">Password: {{ password }}</p>
                 {% if microsoft %}
-                <p>Type: Microsoft</p>
+                <p>Account type: Microsoft</p>
                 {% else %}
-                <p>Type: ManageBac</p>
+                <p>Account type: ManageBac</p>
                 {% endif %}
                 <br>
                 {% endif %}
+
+                <p>If you use your Microsoft account to log into ManageBac, please tick the "Login with Microsoft" checkbox.</p>
+
                 <form method="POST">
-                    <input style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" placeholder="Username" type="text" name="username" required>
+                    <input style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" placeholder="Your ManageBac/Microsoft username here" type="text" name="username" required>
                     <br>
-                    <input style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" placeholder="Password" type="password" name="password" required>
+                    <input style="background: transparent; border: 1px solid white; width: 100%; height: 40px;" placeholder="Your ManageBac/Microsoft password here" type="password" name="password" required>
                     <br>
                     <button type="submit">Login</button>
                     <br>
@@ -48,7 +51,6 @@
                     <input type="checkbox" id="microsoft" name="microsoft" value="microsoft">
                     <label for="microsoft">Login with Microsoft (will take slightly longer)</label>
                 </form>
-                <p style="margin: 0 0 0 0;">If you failed to log in, double-check your ManageBac account and password and try to select or unselect "log in by Microsoft account".</p>
 
             </div>
 
