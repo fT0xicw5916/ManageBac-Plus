@@ -7,6 +7,9 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
         <link rel="shortcut icon" href="{{ url_for('static', filename='imgs/favicon.ico') }}">
         <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
     </head>
     <body class="is-preload">
 
@@ -26,32 +29,41 @@
             <strong style="font-size: 20px;"><a href="/load_grades?reload=1">>> Reload <<</a></strong>
             <br>
 
-            <div class="subjects">
-
-                {% for i, grade in enumerate(grades) %}
-
-                {% if grade is none %}
-                {% else %}
-
-                <div class="subject">
-                    <h3><u>{{ grade["class_name"] }}</u></h3>
-                    {% for j, term in enumerate(grade["grades"]) %}
-                    {% if term[0] == "Overall" %}
-                    <b style="font-size: 20px;">{{ term[0] }}: {{ term[1] }} ({{ ranks[i]["grades"][j][1] }})</b>
-                    <br>
-                    <br>
-                    {% else %}
-                    <p>{{ term[0] }}: {{ term[1] }} ({{ ranks[i]["grades"][j][1] }})</p>
-                    {% endif %}
-                    {% endfor %}
-                    <button><a href="/tasks?subject={{ grade['class_name'] }}">Tasks</a></button>
+            <div style="display: flex; justify-content: space-around; align-items: flex-start; width: 100%; height: 500px;">
+                <div id="container" style="flex: 1; padding: 20px; height: 100%;"></div>
+                <div id="info-panel" style="display: none; padding: 20px; width: 40%; border-left: 1px solid white;">
+                    <h3><u id="class-name"></u></h3>
+                    <b id="overall-score"></b>
+                    <div id="categories"></div>
                 </div>
-
-                {% endif %}
-
-                {% endfor %}
-
             </div>
+
+<!--            <div class="subjects">-->
+
+<!--                {% for i, grade in enumerate(grades) %}-->
+
+<!--                {% if grade is none %}-->
+<!--                {% else %}-->
+
+<!--                <div class="subject">-->
+<!--                    <h3><u>{{ grade["class_name"] }}</u></h3>-->
+<!--                    {% for j, term in enumerate(grade["grades"]) %}-->
+<!--                    {% if term[0] == "Overall" %}-->
+<!--                    <b style="font-size: 20px;">{{ term[0] }}: {{ term[1] }} ({{ ranks[i]["grades"][j][1] }})</b>-->
+<!--                    <br>-->
+<!--                    <br>-->
+<!--                    {% else %}-->
+<!--                    <p>{{ term[0] }}: {{ term[1] }} ({{ ranks[i]["grades"][j][1] }})</p>-->
+<!--                    {% endif %}-->
+<!--                    {% endfor %}-->
+<!--                    <button><a href="/tasks?subject={{ grade['class_name'] }}">Tasks</a></button>-->
+<!--                </div>-->
+
+<!--                {% endif %}-->
+
+<!--                {% endfor %}-->
+
+<!--            </div>-->
             <br>
             <br>
 
@@ -89,6 +101,84 @@
         <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/util.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script>
+            Highcharts.chart("container", {
+                chart: {
+                    type: "variablepie",
+                    backgroundColor: null
+                },
+                title: {
+                    text: "GPA Overview",
+                    style: {
+                        color: "white"
+                    }
+                },
+                tooltip: {
+                    pointFormat: "Overall: {point.z}"
+                },
+                subtitle: {
+                    text: "Click the reload button to refresh your grades"
+                },
+                plotOptions: {
+                    variablepie: {
+                        allowPointSelect: true,
+                        cursor: "pointer",
+                        dataLabels: [{
+                            enabled: true,
+                            distance: 20
+                        }]
+                    },
+                    series: {
+                        cursor: "pointer",
+                        point: {
+                            events: {
+                                click: function() {
+                                    document.getElementById("info-panel").style.display = "block";
+                                    document.getElementById("class-name").textContent = this.name;
+                                    {% for sub in ranks %}
+                                    if (this.name === "{{ sub['class_name'] }}") {
+                                        document.getElementById("overall-score").textContent = "Overall: " + this.z + " ({{ sub['grades'][0][1] }})";
+                                    }
+                                    {% endfor %}
+                                    let categories = document.getElementById("categories");
+                                    categories.innerHTML = "";
+                                    let category;
+                                    let score;
+                                    let weight;
+                                    {% for idx, subject in enumerate(grades) %}
+                                    if (this.name === "{{ subject['class_name'] }}") {
+                                        {% for cat in subject["grades"][1:] %}
+                                        category = document.createElement("p");
+                                        category.style.margin = "0";
+                                        score = "{{ 'N/A' if cat[1] is none else cat[1] }}";
+                                        weight = "{{ cat[2] }}";
+                                        category.textContent = "{{ cat[0] }}: " + score + " ({{ ranks[idx]['grades'][loop.index][1] }})";
+                                        categories.appendChild(category);
+                                        {% endfor %}
+                                    }
+                                    {% endfor %}
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    colorByPoint: true,
+                    data: [
+                        {% for subject in grades %}
+                        {
+                            name: "{{ subject['class_name'] }}",
+                            y: 1,
+                            {% if subject["grades"][0][1] is none %}
+                            z: 0
+                            {% else %}
+                            z: {{ subject["grades"][0][1] }}
+                            {% endif %}
+                        },
+                        {% endfor %}
+                    ]
+                }]
+            });
+        </script>
     </body>
 </html>
-
