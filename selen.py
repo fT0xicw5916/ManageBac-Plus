@@ -110,6 +110,7 @@ class ManagebacDriver:
         return past_tasks
 
     def get_task_num(self, subject, category):
+        # TODO: Only get tasks graded
         self.driver.get("https://huijia.managebac.cn/student")
 
         unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
