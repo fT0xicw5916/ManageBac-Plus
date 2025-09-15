@@ -285,7 +285,7 @@ def load_grades():
         GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 1.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
-    elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached
+    elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached or requesting reload
         GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
         GLOB_gpa_data[username] = []
         R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
@@ -312,7 +312,12 @@ def grades():
                 continue
             for i in sub["grades"]:
                 i[1] = None if i[1] is None else perc2rank(i[1])
-        return render_template("grades.html", grades=json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")], ranks=ranks, enumerate=enumerate)
+
+        g = json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]
+        if g[-1] is None:  # G10 student
+            return render_template("grades.html", grades=g[:-2], ranks=ranks[:-2], enumerate=enumerate)
+        else:  # G11 student
+            return render_template("grades.html", grades=g, ranks=ranks, enumerate=enumerate)
 
     elif request.method == "POST":
         subject = request.form.get("subject")
@@ -357,7 +362,7 @@ def tick():
 
     credentials = Credentials()
     for i in credentials.browse():
-        for _ in cache_grade_data(i[0], i[1], i[2], []):
+        for _ in cache_grade_data(i[0], i[1], i[2], [], tick=True):
             pass
 
     app.logger.info("Tock")
