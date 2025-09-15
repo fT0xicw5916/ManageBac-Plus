@@ -46,7 +46,7 @@ class CacheGradeDataThread(threading.Thread):
         self.R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
 
 
-def cache_grade_data(username, password, microsoft, dest, tick=False):
+def cache_grade_data(username, password, microsoft, dest, tick=False, reload=False):
     logger = logging.getLogger("app.cache")
     logger.info(f"Caching GPA data for ({username}, {password}, {"MS" if microsoft else "MB"})...")
 
@@ -78,7 +78,7 @@ def cache_grade_data(username, password, microsoft, dest, tick=False):
                     continue
                 w.append(k[0])
             scores.new_class(i["class_name"], w)
-    if len(credentials.search(username)) == 0 and not tick:
+    if (len(credentials.search(username)) == 0 or reload) and not tick:
         credentials.new(username, password, microsoft, classes)
 
     # New score entry

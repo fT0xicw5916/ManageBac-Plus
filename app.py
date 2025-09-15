@@ -254,8 +254,8 @@ def get_cache_grade_data_progress():
     return json.dumps(progress)
 
 
-def cache_grade_data_wrapper(username, password, microsoft, dest):
-    for i in cache_grade_data(username, password, microsoft, dest):
+def cache_grade_data_wrapper(username, password, microsoft, dest, reload):
+    for i in cache_grade_data(username, password, microsoft, dest, reload=reload):
         GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = i
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
@@ -294,7 +294,7 @@ def load_grades():
         GLOB_cache_gpa_progress[username] = 0.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
 
-        c = CacheGradeDataThread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), json.loads(R.get("GLOB_gpa_data"))[username]), daemon=True, R=R)
+        c = CacheGradeDataThread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), json.loads(R.get("GLOB_gpa_data"))[username], int(request.args.get("reload", 0)) == 1), daemon=True, R=R)
         c.start()
 
     return render_template("load_grades.html")
