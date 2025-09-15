@@ -194,9 +194,12 @@ class ManagebacDriver:
             progress += 1
             yield progress / (len(name_and_urls) + 1)
 
-        if len(dest) < 9:  # For G10 students
-            while len(dest) < 9:
-                dest.append(None)
+        if len(dest) == 0:  # Login failed
+            return None  # Abort
+
+        if len(dest) < 9:  # For G10 students w/ 7 classes
+            dest.append(None)
+            dest.append(None)
         return None
 
     def terminate(self):

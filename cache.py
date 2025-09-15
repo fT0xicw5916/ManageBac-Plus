@@ -58,6 +58,9 @@ def cache_grade_data(username, password, microsoft, dest):
     driver.terminate()
     yield 1.
 
+    if len(dest) == 0:
+        return None
+
     credentials = Credentials()
     scores = Scores()
 

@@ -303,6 +303,9 @@ def load_grades():
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
     if request.method == "GET":
+        if len(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]) == 0:  # Login failed
+            return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
+
         ranks = copy.deepcopy(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")])
         for sub in ranks:
             if sub is None:
