@@ -75,7 +75,8 @@ def cache_grade_data(username, password, microsoft, dest):
                     continue
                 w.append(k[0])
             scores.new_class(i["class_name"], w)
-    credentials.new(username, password, microsoft, classes)
+    if len(credentials.search(username)) == 0:
+        credentials.new(username, password, microsoft, classes)
 
     # New score entry
     id = credentials.search(username)[-1][0]
