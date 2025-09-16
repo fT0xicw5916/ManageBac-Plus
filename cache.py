@@ -50,13 +50,17 @@ def cache_grade_data(username, password, microsoft, dest, tick=False, reload=Fal
     logger = logging.getLogger("app.cache")
     logger.info(f"Caching GPA data for ({username}, {password}, {"MS" if microsoft else "MB"})...")
 
-    yield 0.
-    driver = ManagebacDriver(username, password, microsoft=microsoft)
-    yield 0.1
-    for i in driver.get_grades(dest):
-        yield i + 0.1
-    driver.terminate()
-    yield 1.
+    driver = None
+    try:
+        yield 0.
+        driver = ManagebacDriver(username, password, microsoft=microsoft)
+        yield 0.1
+        for i in driver.get_grades(dest):
+            yield i + 0.1
+    finally:
+        if driver:
+            driver.terminate()
+        yield 1.
 
     if len(dest) == 0:
         return None

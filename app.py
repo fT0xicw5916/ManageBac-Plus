@@ -185,18 +185,22 @@ def tasks():
         credentials = Credentials()
         username = request.cookies.get("username")
         password = request.cookies.get("password")
-        driver = ManagebacDriver(username, password, microsoft=int(request.cookies.get("microsoft")))
 
-        id = credentials.search(username)[-1][0]
-        category = request.form.get("category")
-        new_raw_score = int(request.form.get("new_raw_score"))
-        new_max_score = int(request.form.get("new_max_score"))
-        scores = Scores()
-        current_overall = scores.search_score(id, subject)[-1][1]
-        task_num = driver.get_task_num(subject, category)
-        local_avg = scores.get_category_score(id, subject)[category]
+        driver = None
+        try:
+            driver = ManagebacDriver(username, password, microsoft=int(request.cookies.get("microsoft")))
 
-        driver.terminate()
+            id = credentials.search(username)[-1][0]
+            category = request.form.get("category")
+            new_raw_score = int(request.form.get("new_raw_score"))
+            new_max_score = int(request.form.get("new_max_score"))
+            scores = Scores()
+            current_overall = scores.search_score(id, subject)[-1][1]
+            task_num = driver.get_task_num(subject, category)
+            local_avg = scores.get_category_score(id, subject)[category]
+        finally:
+            if driver:
+                driver.terminate()
 
         grades_dict = {}
 
