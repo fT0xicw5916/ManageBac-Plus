@@ -359,7 +359,23 @@ def handle_exceptions(e):
 
     func = app.view_functions.get(request.endpoint)
     if func:
-        return func(**request.view_args)
+        try:
+            return func(**request.view_args)
+        except Exception as e1:
+            app.logger.error(f"Retried 1 time but still failed: {e1}")
+            traceback.print_exc()
+
+            try:
+                return func(**request.view_args)
+            except Exception as e2:
+                app.logger.error(f"Retried 2 times but still failed: {e2}")
+                traceback.print_exc()
+
+                try:
+                    return func(**request.view_args)
+                except Exception as e3:
+                    app.logger.error(f"Retried 3 times but still failed: {e3}, aborting")
+                    traceback.print_exc()
 
     return "Unknown error", 500
 
