@@ -17,6 +17,7 @@ import threading
 import json
 import copy
 import redis
+import traceback
 
 app = Flask("app")
 
@@ -349,6 +350,18 @@ def grades():
 
     app.logger.error("Unknown request method at /grades")
     return "Unknown request method at /grades"
+
+
+@app.errorhandler(Exception)
+def handle_exceptions(e):
+    app.logger.error(f"Exception caught: {e}")
+    traceback.print_exc()
+
+    func = app.view_functions.get(request.endpoint)
+    if func:
+        return func(**request.view_args)
+
+    return "Unknown error", 500
 
 
 @app.route('/')
