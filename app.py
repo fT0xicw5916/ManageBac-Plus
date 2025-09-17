@@ -307,6 +307,8 @@ def load_grades():
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
     if request.method == "GET":
+        time.sleep(1)  # Make sure grades data is stored in redis
+
         if len(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]) == 0:  # Login failed
             return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
 
