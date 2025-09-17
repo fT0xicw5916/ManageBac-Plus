@@ -36,7 +36,7 @@
                     <b id="overall-score"></b>
                     <div id="categories"></div>
                     <br>
-                    <button><a href="/tasks?subject={{ grades['class_name'] }}">Tasks</a></button>
+                    <button><a href="/tasks?subject=" id="tasks-href">Tasks</a></button>
                 </div>
             </div>
 
@@ -137,6 +137,7 @@
                                 click: function() {
                                     document.getElementById("info-panel").style.display = "block";
                                     document.getElementById("class-name").textContent = this.name;
+                                    document.getElementById("tasks-href").href = "/tasks?subject=" + this.name;
                                     {% for sub in ranks %}
                                     if (this.name === "{{ sub['class_name'] }}") {
                                         document.getElementById("overall-score").textContent = "Overall: " + this.z + " ({{ sub['grades'][0][1] }})";
