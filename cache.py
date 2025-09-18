@@ -1,6 +1,7 @@
 from selen import ManagebacDriver
 from dbm.credentials import Credentials
 from dbm.scores import Scores
+from selen import cleanup_chrome_processes
 import logging
 import threading
 import json
@@ -57,9 +58,13 @@ def cache_grade_data(username, password, microsoft, dest, tick=False, reload=Fal
         yield 0.1
         for i in driver.get_grades(dest):
             yield i + 0.1
+    except Exception as e:
+        logger.error(f"Selenium error: {e}")
+        raise
     finally:
         if driver:
             driver.terminate()
+            cleanup_chrome_processes()
         yield 1.
 
     if len(dest) == 0:

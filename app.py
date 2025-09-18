@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, make_response, redirect, send_from_directory, url_for
-from selen import ManagebacDriver
+from selen import ManagebacDriver, cleanup_chrome_processes
 from cache import cache_grade_data, get_grade_data, CacheGradeDataThread
 from dbm.credentials import Credentials
 from dbm.scores import Scores
@@ -199,9 +199,13 @@ def tasks():
             current_overall = scores.search_score(id, subject)[-1][1]
             task_num = driver.get_task_num(subject, category)
             local_avg = scores.get_category_score(id, subject)[category]
+        except Exception as e:
+            app.logger.error(f"Selenium error: {e}")
+            raise
         finally:
             if driver:
                 driver.terminate()
+                cleanup_chrome_processes()
 
         grades_dict = {}
 
@@ -357,6 +361,8 @@ def handle_exceptions(e):
     app.logger.error(f"Exception caught: {e}")
     traceback.print_exc()
 
+    cleanup_chrome_processes()
+
     func = app.view_functions.get(request.endpoint)
     if func:
         try:
@@ -365,17 +371,23 @@ def handle_exceptions(e):
             app.logger.error(f"Retried 1 time but still failed: {e1}")
             traceback.print_exc()
 
+            cleanup_chrome_processes()
+
             try:
                 return func(**request.view_args)
             except Exception as e2:
                 app.logger.error(f"Retried 2 times but still failed: {e2}")
                 traceback.print_exc()
 
+                cleanup_chrome_processes()
+
                 try:
                     return func(**request.view_args)
                 except Exception as e3:
                     app.logger.error(f"Retried 3 times but still failed: {e3}, aborting")
                     traceback.print_exc()
+
+                    cleanup_chrome_processes()
 
     return "Unknown error", 500
 
@@ -392,6 +404,8 @@ def root():
 
 def tick():
     app.logger.info("Tick")
+
+    cleanup_chrome_processes()
 
     os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
 

@@ -4,6 +4,20 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
 import time
 import logging
+import psutil
+
+
+def cleanup_chrome_processes():
+    for proc in psutil.process_iter(["pid", "ppid", "name"]):
+        try:
+            if "chrome" in proc.info["name"].lower():
+                parent = psutil.Process(proc.info["ppid"])
+                if "chromedriver" in parent.name().lower():
+                    proc.kill()
+            elif "chromedriver" in proc.info["name"].lower():
+                proc.kill()
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
 
 
 class ManagebacDriver:
@@ -22,6 +36,7 @@ class ManagebacDriver:
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         self.driver = webdriver.Chrome(options=chrome_options)
+        self.pid = self.driver.service.process.pid
         self.logger = logging.getLogger("app.selen")
 
         self.classes_xpath = "/html/body/div[1]/div[1]/ul/li[4]/ul/*"
@@ -46,6 +61,12 @@ class ManagebacDriver:
             box_psw.send_keys(password)
             btn_log.click()
         self.logger.info(f"Login success (Username = '{username}', Password = '{password}', {"MS" if microsoft else "MB"})")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.terminate()
 
     def __send_keys_stale_element_by_id(self, id, v):
         while True:
