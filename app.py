@@ -225,6 +225,15 @@ def tasks():
     return "Unknown request method at /tasks"
 
 
+@app.route("/logout")
+def logout():
+    res = make_response(redirect(url_for("settings")))
+    res.delete_cookie("username")
+    res.delete_cookie("password")
+    res.delete_cookie("microsoft")
+    return res
+
+
 @app.route("/settings", methods=["POST", "GET"])
 def settings():
     if request.method == "GET":
