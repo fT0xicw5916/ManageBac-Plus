@@ -59,7 +59,7 @@ def cache_grade_data(username, password, microsoft, dest, tick=False, reload=Fal
         for i in driver.get_grades(dest):
             yield i + 0.1
     except Exception as e:
-        logger.error(f"Selenium error: {e}")
+        logger.error(f"Selenium error:\n{e}")
         raise
     finally:
         if driver:
@@ -101,3 +101,4 @@ def cache_grade_data(username, password, microsoft, dest, tick=False, reload=Fal
         scores.new_score(id, i["class_name"], s)
 
     logger.info("Cache complete.")
+    return None

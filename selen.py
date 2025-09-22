@@ -34,6 +34,7 @@ class ManagebacDriver:
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--incognito")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--no-proxy-server")
         chrome_options.add_argument("--disable-dev-shm-usage")
         self.driver = webdriver.Chrome(options=chrome_options)
         self.pid = self.driver.service.process.pid
