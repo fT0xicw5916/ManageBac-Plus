@@ -312,11 +312,10 @@ def load_grades():
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
     if request.method == "GET":
-        time.sleep(1)  # Make sure grades data is stored in redis
-
         if len(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]) == 0:  # Login failed
             app.logger.error(f"Login failed with {request.cookies.get("username")}, {request.cookies.get("password")}, {"MS" if int(request.cookies.get("microsoft")) else "MB"}")
-            return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
+            return redirect(url_for("grades"))
+            # return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
 
         ranks = copy.deepcopy(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")])
         for sub in ranks:
@@ -328,8 +327,7 @@ def grades():
         g = json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]
         if g[-1] is None:  # G10 student
             return render_template("grades.html", grades=g[:-2], ranks=ranks[:-2], enumerate=enumerate)
-        else:  # G11 student
-            return render_template("grades.html", grades=g, ranks=ranks, enumerate=enumerate)
+        return render_template("grades.html", grades=g, ranks=ranks, enumerate=enumerate)
 
     elif request.method == "POST":
         subject = request.form.get("subject")
