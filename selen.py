@@ -64,12 +64,6 @@ class ManagebacDriver:
             btn_log.click()
         self.logger.info(f"Login success (Username = '{username}', Password = '{password}', {"MS" if microsoft else "MB"})")
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.terminate()
-
     def __send_keys_stale_element_by_id(self, id, v):
         while True:
             try:

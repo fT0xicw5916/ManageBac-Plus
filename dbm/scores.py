@@ -16,20 +16,32 @@ class Scores:
         self.cur = self.con.cursor()
         self.logger = logging.getLogger("app.scores")
 
-    def new_class(self, name: str, weights):
+    def new_class(self, name, weights):
         w = ""
         for weight in weights:
             w += '`' + weight + '`' + " FLOAT(24), "
+
         if w == "":
             command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24));"
         else:
             command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});"
+
+        if self.__find_class(name):  # Class already exists, we delete it first
+            command = f"DROP TABLE `{name}`; " + command
+
         self.logger.info(f"New class table created with '{command}'")
         self.cur.execute(command)
 
-    def check_class(self, name):
+    def __find_class(self, name):
         self.cur.execute(f"SHOW TABLES LIKE \"{name}\";")
         return False if len(self.cur.fetchall()) == 0 else True
+
+    def check_class(self, name, weights):
+        self.cur.execute(f"SHOW TABLES LIKE \"{name}\";")
+        if len(self.cur.fetchall()) > 0:  # Class exists, now check for weights
+            if sorted(weights) == sorted([i[0] for i in self.get_weight_names(name)][2:]):  # Weights match
+                return True  # Class exists with correct weights
+        return False
 
     def new_score(self, id, c, s):
         data = ""

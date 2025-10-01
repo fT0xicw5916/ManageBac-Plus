@@ -80,7 +80,7 @@ def cache_grade_data(username, password, microsoft, dest, tick=False, reload=Fal
             classes.append("None")
             continue
         classes.append(i["class_name"])
-        if not scores.check_class(i["class_name"]):
+        if not scores.check_class(i["class_name"], [cat[0] for cat in i["grades"][1:]]):
             w = []
             for k in i["grades"]:
                 if k[0] == "Overall" or k[0] == "整体":
