@@ -27,7 +27,8 @@ class Scores:
             command = f"CREATE TABLE `{name}` (id int, Overall FLOAT(24), {w[:-2]});"
 
         if self.__find_class(name):  # Class already exists, we delete it first
-            command = f"DROP TABLE `{name}`; " + command
+            self.logger.warning(f"Class {name} exists, dropping with command 'DROP TABLE `{name}`;'.")
+            self.cur.execute(f"DROP TABLE `{name}`;")
 
         self.logger.info(f"New class table created with '{command}'")
         self.cur.execute(command)
