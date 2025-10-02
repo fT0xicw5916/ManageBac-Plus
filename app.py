@@ -323,8 +323,7 @@ def grades():
     if request.method == "GET":
         if len(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]) == 0:  # Login failed
             app.logger.error(f"Login failed with {request.cookies.get("username")}, {request.cookies.get("password")}, {"MS" if int(request.cookies.get("microsoft")) else "MB"}")
-            return redirect(url_for("grades"))
-            # return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
+            return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
 
         ranks = copy.deepcopy(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")])
         for sub in ranks:
@@ -364,40 +363,18 @@ def grades():
     return "Unknown request method at /grades"
 
 
+@app.route("/favicon.ico")
+def favicon_ico():
+    return send_from_directory(os.path.join(app.root_path, "static"), "imgs/favicon.ico", mimetype="image/vnd.microsoft.icon")
+
+
 @app.errorhandler(Exception)
 def handle_exceptions(e):
-    app.logger.error(f"Exception caught:\n{e}")
+    app.logger.error(f"Exception caught at {request.path} with {request.method}:\n{e}")
     traceback.print_exc()
-
     cleanup_chrome_processes()
 
-    func = app.view_functions.get(request.endpoint)
-    if func:
-        try:
-            return func(**request.view_args)
-        except Exception as e1:
-            app.logger.error(f"Retried 1 time but still failed:\n{e1}")
-            traceback.print_exc()
-
-            cleanup_chrome_processes()
-
-            try:
-                return func(**request.view_args)
-            except Exception as e2:
-                app.logger.error(f"Retried 2 times but still failed:\n{e2}")
-                traceback.print_exc()
-
-                cleanup_chrome_processes()
-
-                try:
-                    return func(**request.view_args)
-                except Exception as e3:
-                    app.logger.error(f"Retried 3 times but still failed:\n{e3}\nAborting...")
-                    traceback.print_exc()
-
-                    cleanup_chrome_processes()
-
-    return "Unknown error", 500
+    return f"Exception caught at {request.path} with {request.method}:\n{e}", 500
 
 
 @app.route('/')
