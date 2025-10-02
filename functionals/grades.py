@@ -232,7 +232,10 @@ def new_task_predict(raw_score, max_score, current_overall, task_num, local_avg,
             continue
         excluded_overall_score += value[0] * value[1]
     excluded_overall_score -= (0 if grades[category][0] is None else grades[category][0]) * grades[category][1]
-    new_overall = round((excluded_overall_score + (new_local_avg * grades[category][1])) / sum([value[1] for _, value in grades.items() if value[0] is not None]), 2)
+    if local_avg == 0:
+        new_overall = round((excluded_overall_score + (new_local_avg * grades[category][1])) / (sum([value[1] for _, value in grades.items() if value[0] is not None]) + grades[category][1]), 2)
+    else:
+        new_overall = round((excluded_overall_score + (new_local_avg * grades[category][1])) / sum([value[1] for _, value in grades.items() if value[0] is not None]), 2)
     delta_local = "{:+}".format(round(new_local_avg - local_avg), 2)
     delta_overall = "{:+}".format(round(new_overall - current_overall), 2)
     return new_local_avg, new_overall, delta_local, delta_overall
