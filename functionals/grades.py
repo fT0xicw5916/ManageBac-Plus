@@ -221,7 +221,7 @@ def new_task_predict(raw_score, max_score, current_overall, task_num, local_avg,
     :return: new_local_avg, the new category average score after the simulation; new_overall, the new overall score after the simulation; delta_local: the change in the task's category average score after the new task is added; delta_overall: the change of overall score after the new task is added
     """
     per_score = round((raw_score / max_score) * 100, 2)
-    if sum([value[1] for key, value in grades.items() if value[0] is not None]) == 0:
+    if sum([value[1] for _, value in grades.items() if value[0] is not None]) == 0:
         return per_score, per_score, '-', '-'
     current_overall = 0 if current_overall is None else current_overall
     local_avg = 0 if local_avg is None else local_avg

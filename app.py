@@ -197,7 +197,7 @@ def tasks():
             new_max_score = int(request.form.get("new_max_score"))
             scores = Scores()
             current_overall = scores.search_score(id, subject)[-1][1]
-            task_num = driver.get_task_num(subject, category)
+            task_num = driver.get_graded_task_num(subject, category)
             local_avg = scores.get_category_score(id, subject)[category]
         except Exception as e:
             app.logger.error(f"Selenium error: {e}")

@@ -126,8 +126,7 @@ class ManagebacDriver:
 
         return past_tasks
 
-    def get_task_num(self, subject, category):
-        # TODO: Only get tasks graded
+    def get_graded_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
 
         unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
@@ -150,8 +149,9 @@ class ManagebacDriver:
         task_num = 0
         for div in tasks_list_divs:
             tags = [i.get_attribute("innerHTML") for i in div.find_elements(By.XPATH, "div[1]/div[2]/div/div/*")[1:-1]]
-            if category[:category.find(' ')] in tags:
-                task_num += 1
+            if category[:category.find(' ')] in tags:  # Belongs to the target category
+                if "pts" in div.get_attribute("innerHTML"):  # Score task
+                    task_num += 1
 
         return task_num
 
