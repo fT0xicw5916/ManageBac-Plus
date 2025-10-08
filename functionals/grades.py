@@ -4,6 +4,7 @@ import random
 import matplotlib
 import os
 import sys
+import re
 
 sys.path.insert(0, "..")
 
@@ -17,8 +18,65 @@ def shorter_names(x):
     :param x: The original, full name of the subject
     :return: The shortened name of the given subject
     """
-    # TODO
-    return x
+    dp_year = None
+    name = None
+    level = None
+    grade = re.findall("Grade ..", x)[0]
+
+    if x[:5] == "IB DP":
+        x = x[6:]
+
+    if x[:2] == "PE":
+        if grade == "Grade 10":
+            dp_year = "Pre-DP"
+        elif grade == "Grade 11" or grade == "Grade 12":
+            dp_year = "DP"
+        name = "PE"
+
+    elif x[:2] == "DP":
+        dp_year = x[:3]
+
+        if x[4:7] == "CAS":
+            level = "IB DP Core Course"
+            name = "CAS"
+
+        elif x[4:7] == "TOK":
+            level = "IB DP Core Course"
+            name = "TOK"
+
+        else:
+            name_pattern = r"DP[12]\s+(.*?)\s+(?:SL|HL)"
+            name_match = re.search(name_pattern, x)
+            if name_match:
+                name = name_match.group(1)
+                level = re.findall(r"(HL|SL)", x)[0]
+
+    else:
+        dp_year = "Pre-DP"
+        name_pattern = r"[A-Za-z].*?(?=\s*\()"
+        name_match = re.search(name_pattern, x)
+        if name_match:
+            name = name_match[0]
+        if "English" in x:
+            if x[0] == 'A':
+                level = "Advanced English"
+            elif x[0] == 'I':
+                level = "Intermediate English"
+            elif x[0] == 'S':
+                level = "Standard English"
+        elif "Calculus" in x:
+            if x[13] == 'E':
+                level = "Extended Mathematics"
+            elif x[13] == 'C':
+                level = "Core Mathematics"
+            elif x[13] == 'B':
+                level = "Basic Mathematics"
+        elif "Honor" in x:
+            level = "Honor Course"
+        else:
+            level = "Standard Course"
+
+    return name, level, dp_year, grade
 
 
 def radar_percs_edge(subjects, percs):
@@ -30,7 +88,7 @@ def radar_percs_edge(subjects, percs):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
-    subjects = [shorter_names(i) for i in subjects]
+    subjects = [shorter_names(i)[0] for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -77,7 +135,7 @@ def radar_ranks_edge(subjects, ranks):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
-    subjects = [shorter_names(i) for i in subjects]
+    subjects = [shorter_names(i)[0] for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -140,7 +198,7 @@ def radar_ranks(subjects, ranks, transparent=False, color=Colors.BLUE):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
-    subjects = [shorter_names(i) for i in subjects]
+    subjects = [shorter_names(i)[0] for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -178,7 +236,7 @@ def radar_percs(subjects, percs, transparent=False, color=Colors.BLUE):
     :return: The path where the image file of the radar graph is stored relative to static/
     """
     matplotlib.use("agg")
-    subjects = [shorter_names(i) for i in subjects]
+    subjects = [shorter_names(i)[0] for i in subjects]
 
     circle = np.linspace(0, 2 * np.pi, len(subjects), endpoint=False).tolist()
     closed_circle = circle.copy()
@@ -236,6 +294,6 @@ def new_task_predict(raw_score, max_score, current_overall, task_num, local_avg,
         new_overall = round((excluded_overall_score + (new_local_avg * grades[category][1])) / (sum([value[1] for _, value in grades.items() if value[0] is not None]) + grades[category][1]), 2)
     else:
         new_overall = round((excluded_overall_score + (new_local_avg * grades[category][1])) / sum([value[1] for _, value in grades.items() if value[0] is not None]), 2)
-    delta_local = "{:+}".format(round(new_local_avg - local_avg), 2)
-    delta_overall = "{:+}".format(round(new_overall - current_overall), 2)
+    delta_local = "{:+}".format(round(new_local_avg - local_avg, 2))
+    delta_overall = "{:+}".format(round(new_overall - current_overall, 2))
     return new_local_avg, new_overall, delta_local, delta_overall

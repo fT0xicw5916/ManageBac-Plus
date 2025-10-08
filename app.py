@@ -78,32 +78,6 @@ def toolbox_sub(sub):
         l = notebooks.browse()
         return render_template("notebooks.html", notebooks=l)
 
-    # elif sub == "trend":
-    #     if request.method == "GET":
-    #         username = request.cookies.get("username")
-    #         if username is None:
-    #             return redirect(url_for("settings"))
-
-            # credentials = Credentials()
-            # data = credentials.search(username)
-            # if len(data) == 0:  # Data not cached
-            #     grades_data = cache_grade_data(username, request.cookies.get("password"), int(request.cookies.get("microsoft")))
-            #     return render_template("trend.html", classes=[i["class_name"] for i in grades_data])
-            # else:  # Data cached
-            #     data = data[-1]
-            #     return render_template("trend.html", classes=data[3:])
-
-        # elif request.method == "POST":
-        #     subject = request.form.get("class")
-
-            # driver = ManagebacDriver(request.cookies.get("username"), request.cookies.get("password"), int(request.cookies.get("microsoft")))
-            # past_tasks = driver.get_past_tasks(subject)
-            # driver.terminate()
-
-            # trend = []
-            # for name, score in past_tasks.items():
-            # return render_template("radar.html", prev_href="/toolbox/trend", prev="Trend Graphs", title="Trend Graph", src=src)
-
     app.logger.error(f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}")
     return f"Subdomain out of range at /toolbox/<sub>; requested /toolbox/{sub}"
 
