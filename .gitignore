@@ -121,3 +121,4 @@ instance/*
 files/
 static/gen/
 logs.log
+.git/
