@@ -15,6 +15,8 @@ def shorter_names(x):
     """
     Shortens the name of the given subject for the sake of displaying them on the legend of GPA graphs.
 
+    Credits to Charles Zhang Chuhan.
+
     :param x: The original, full name of the subject
     :return: The shortened name of the given subject
     """

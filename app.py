@@ -327,9 +327,9 @@ def grades():
                 overall = 0. if overall is None else overall
                 a = sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and idx != 0])
                 if term == "mid":
-                    result = (((a + 0.2) * float(target)) - (sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and i[0] != "Mid-term Exam (20%)" and idx != 0]) * overall)) / 0.2
+                    result = (((a + 0.2) * float(target)) - (sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and i[0] != "Mid-term Exam (20%)" and i[0] != "期中考试 (20%)" and idx != 0]) * overall)) / 0.2
                 elif term == "final":
-                    result = (((a + 0.3) * float(target)) - (sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and i[0] != "Final Exam (30%)" and idx != 0]) * overall)) / 0.3
+                    result = (((a + 0.3) * float(target)) - (sum([i[2] for idx, i in enumerate(s["grades"]) if i[1] is not None and i[0] != "Final Exam (30%)" and i[0] != "期末考试 (30%)" and idx != 0]) * overall)) / 0.3
                 break
         return render_template("grades_calc.html", result=f"{result:0.3f}", target=target, term=term, subject=subject, overall=overall, a=a)
 
