@@ -19,13 +19,13 @@ Just a simple Python Flask webapp built around ManageBac that adds a lot of usef
 
 ## Features
 - A convenient way of checking your GPA using pie charts
-- GPA calculator for midterms and finals
+- GPA calculator for mid-terms and finals
 - GPA calculator for marginal tasks (One extra task in a given category)
 - Graphs for all those calculations
 - Radar graph generation with respect to multiple subjects
 - Personal projects gallery
 - An online platform for sharing Mochi decks as well as notebooks
-- Reverse proxy with `nginx` and deployment level WSGI backend server to parallel process requests
+- Reverse proxy with nginx and deployment level WSGI backend server to parallel process requests
 - ... and much more!
 
 ## Usage
@@ -71,8 +71,6 @@ We're all just high school students and making perfect dynamic websites is obvio
 - Lack of encryption for personal credentials
 - Horrible database schema that minimizes efficiency
 - Tons of hidden bugs not fixed
-- Code inconsistency
-- Lacks capability to parallel process a large number of requests at once
 - Uses a ton of RAM (not optimized at all)
 - Funding problems for future server deployment (SOLVED)
 
