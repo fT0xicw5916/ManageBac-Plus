@@ -80,52 +80,6 @@ class ManagebacDriver:
             except (StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException):
                 pass
 
-    def get_past_tasks(self, subject):
-        # TODO
-        self.driver.get("https://huijia.managebac.cn/student")
-
-        unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
-        name_and_url = None
-        for unfiltered_li_class in unfiltered_li_classes:
-            unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
-            unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
-
-            if unfiltered_text == subject:
-                name_and_url = (unfiltered_text, unfiltered_link.get_attribute("href"))
-                break
-
-        if name_and_url is None:
-            self.logger.error(f"Subject not found when trying to get past tasks for {subject}")
-            return None
-
-        self.driver.get(name_and_url[1] + "/core_tasks")
-        tasks_list_divs = self.driver.find_elements(By.XPATH, self.tasks_xpath)[2:]
-        tasks_list_divs = tasks_list_divs[::-1]  # Old task on top, latest task bottom
-
-        past_tasks = {}
-        for div in tasks_list_divs:
-            name = div.find_element(By.XPATH, "div[1]/div[2]/h4/a").get_attribute("innerHTML")
-            score_s = None
-
-            try:  # Score task
-                score_s = div.find_element(By.XPATH, "div[2]/div/div/div").get_attribute("innerHTML")
-            except:  # Not a score task (Score task and/or Completed)
-                try:  # Score task w/ completed
-                    score_s = div.find_element(By.XPATH, "div[2]/div[1]/div/div").get_attribute("innerHTML")
-                except:  # Completed
-                    past_tasks[name] = 1
-                    continue
-
-            if score_s == "N/A":  # N/A task
-                continue
-            elif score_s is None or score_s == "":  # Not assessed yet
-                continue
-            score_l = score_s.split(" / ")
-            score = float(score_l[0]) / float(score_l[1][:-4])
-            past_tasks[name] = score
-
-        return past_tasks
-
     def get_graded_task_num(self, subject, category):
         self.driver.get("https://huijia.managebac.cn/student")
 
