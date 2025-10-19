@@ -147,7 +147,7 @@ class ManagebacDriver:
                     text_grade = div_grade.find_element(By.XPATH, "div[2]").get_attribute("innerHTML")
 
                     prop = int(name_with_prop[name_with_prop.find('(')+1:name_with_prop.find('%')]) / 100 if i else None
-                    grade = float(text_grade[text_grade.find('(')+1:text_grade.find('%')]) if text_grade != "\n-\n" else None
+                    grade = float(text_grade[text_grade.find('(')+1:text_grade.find('%')]) if text_grade != "\n-\n" and text_grade != "\n<strong></strong>\n(NaN%)\n" else None
 
                     info_grades.append([name_with_prop, grade, prop])
 
