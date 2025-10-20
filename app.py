@@ -260,20 +260,23 @@ def load_grades():
     if username is None or password is None:
         return redirect(url_for("settings", next="load_grades"))
 
-    GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
-    GLOB_gpa_data[username] = None
-    R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
     credentials = Credentials()
 
     if len(credentials.search(username)) > 0 and int(request.args.get("reload", 0)) == 0:  # Data cached
+        # Start progress bar
         GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 0.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
 
+        if password != credentials.search(username)[-1][2]:  # Check if password matches
+            return "Wrong password. Please check your password at <a href='/settings'>/settings</a> and try again."
+
+        # Load data
         GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
         GLOB_gpa_data[username] = get_grade_data(username)
         R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
 
+        # Finish progress bar
         GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 1.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
