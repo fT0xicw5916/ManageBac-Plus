@@ -45,6 +45,8 @@ R = redis.Redis(connection_pool=redis.ConnectionPool(host="localhost", port=6379
 def radar():
     # Since /radar is from /grades, safe to assume that grades data is cached
     g = get_grade_data(request.cookies.get("username"))
+    if g == 1:
+        return redirect(url_for("load_grades", reload=1))
     subjects = [i["class_name"] for i in g]
     ranks = [perc2rank(0. if i["grades"][0][1] is None else i["grades"][0][1]) for i in g]
     percs = [0. if i["grades"][0][1] is None else i["grades"][0][1] for i in g]
@@ -184,6 +186,8 @@ def tasks():
         grades_dict = {}
 
         g = get_grade_data(username)
+        if g == 1:
+            return redirect(url_for("load_grades", reload=1))
         for s in g:
             if s["class_name"] == subject:
                 for c in s["grades"]:
@@ -273,7 +277,12 @@ def load_grades():
 
         # Load data
         GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
-        GLOB_gpa_data[username] = get_grade_data(username)
+        d = get_grade_data(username)
+
+        if d == 1:
+            return redirect(url_for("load_grades", reload=1))
+
+        GLOB_gpa_data[username] = d
         R.set("GLOB_gpa_data", json.dumps(GLOB_gpa_data))
 
         # Finish progress bar
