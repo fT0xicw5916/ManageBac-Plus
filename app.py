@@ -47,6 +47,8 @@ def radar():
     g = get_grade_data(request.cookies.get("username"))
     if g == 1:
         return redirect(url_for("load_grades", reload=1))
+    if g[-1] is None:  # G10
+        g = g[:-2]
     subjects = [i["class_name"] for i in g]
     ranks = [perc2rank(0. if i["grades"][0][1] is None else i["grades"][0][1]) for i in g]
     percs = [0. if i["grades"][0][1] is None else i["grades"][0][1] for i in g]

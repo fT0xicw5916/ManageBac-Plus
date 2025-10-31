@@ -68,7 +68,7 @@ class Scores:
         return results
 
     def get_weight_names(self, c):
-        self.cur.execute(f"SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = \"scores\" AND table_name = \"{c}\";")
+        self.cur.execute(f"SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = \"scores\" AND table_name = \"{c}\" ORDER BY ORDINAL_POSITION;")
         return self.cur.fetchall()
 
     @staticmethod

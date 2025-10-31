@@ -5,12 +5,14 @@ from selen import cleanup_chrome_processes
 import logging
 import threading
 import json
+import traceback
 
 
 def get_grade_data(username):
     g = []
     credentials = Credentials()
     scores = Scores()
+    logger = logging.getLogger("app.cache")
 
     try:
         data = credentials.search(username)[-1]
@@ -31,7 +33,9 @@ def get_grade_data(username):
                 "class_name": class_,
                 "grades": [list(entry) for entry in zip(n, s, w)]
             })
-    except Exception:
+    except Exception as e:
+        logger.error(f"Error whilst retrieving cached GPA data for {username}:\n{e}")
+        traceback.print_exc()
         return 1
 
     return g
