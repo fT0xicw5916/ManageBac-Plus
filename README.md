@@ -80,7 +80,7 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Uploaded files delete function (Hard, need full account system)
 - /grades add load GPA history
 - Uploaded files change name, description, etc. (Hard, need full account system)
-- Curving calculator for teachers (Currently unfeasible)
+- Curving calculator for teachers (Currently unaccepted)
 - Apple Calendar/WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
 - All kinds of encryptions for the credentials database (Hashing?)
