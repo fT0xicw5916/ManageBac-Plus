@@ -34,7 +34,6 @@ fabric.properties
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-[Ss]cripts
 pyvenv.cfg
 .venv
 pip-selfcheck.json
@@ -119,6 +118,7 @@ instance/*
 
 .idea/
 files/
+reports/
 static/gen/
 logs.log
 .git/
