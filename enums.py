@@ -3,9 +3,10 @@ from openpyxl.styles import PatternFill
 
 
 class ExcelFillColor(Enum):
-    GREEN  = PatternFill(start_color="FF9FCE63", end_color="FF9FCE63", fill_type="solid")
-    ORANGE = PatternFill(start_color="FFEA9B56", end_color="FFEA9B56", fill_type="solid")
-    RED    = PatternFill(start_color="FFEA3323", end_color="FFEA3323", fill_type="solid")
+    GREEN      = PatternFill(start_color="FF9FCE63", end_color="FF9FCE63", fill_type="solid")
+    ORANGE     = PatternFill(start_color="FFEA9B56", end_color="FFEA9B56", fill_type="solid")
+    RED        = PatternFill(start_color="FFEA3323", end_color="FFEA3323", fill_type="solid")
+    LIGHT_GREY = PatternFill(start_color="FFBFBFBF", end_color="FFBFBFBF", fill_type="solid")
 
 
 class ExtendedStrEnum(StrEnum):
