@@ -36,25 +36,25 @@ def main():
     for i in li:
         print(i)
 
-        cookies = {
-            "username": i[0],
-            "password": i[1],
-            "microsoft": '0'
-        }
+        session = requests.Session()
+        session.cookies.set("username", i[0])
+        session.cookies.set("password", i[1])
+        session.cookies.set("microsoft", '0')
         try:
-            requests.get("http://managebac.me/load_grades", cookies=cookies)
+            session.get("http://managebac.me/load_grades")
             time.sleep(30)
+            session.close()
         except Exception:
             pass
 
-        cookies = {
-            "username": i[0],
-            "password": i[1],
-            "microsoft": '1'
-        }
+        session = requests.Session()
+        session.cookies.set("username", i[0])
+        session.cookies.set("password", i[1])
+        session.cookies.set("microsoft", '1')
         try:
-            requests.get("http://managebac.me/load_grades", cookies=cookies)
+            session.get("http://managebac.me/load_grades")
             time.sleep(30)
+            session.close()
         except Exception:
             pass
 
