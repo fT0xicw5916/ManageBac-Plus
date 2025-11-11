@@ -30,6 +30,8 @@ def read_logs(path):
     new_class = 0
     selenium_errors = 0
     mochi = 0
+    login_failed = 0
+    pwn_attempts = 0
 
     with open(path, 'r') as f:
         for line in f:
@@ -83,14 +85,18 @@ def read_logs(path):
             # Errors
             if "selenium.common.exceptions" in line or "Selenium error:" in line:
                 selenium_errors += 1
+            elif "app - Login failed with" in line:
+                login_failed += 1
+            elif "404 Not Found: The requested URL was not" in line:
+                pwn_attempts += 1
 
-    return created_time, info, warning, error, cache_requested, login_success, grade_hit, new_credentials, new_score, tick, radar, notebook, uploads, downloads, illegal_uploads, database_resets, new_class, selenium_errors, mochi
+    return created_time, info, warning, error, cache_requested, login_success, grade_hit, new_credentials, new_score, tick, radar, notebook, uploads, downloads, illegal_uploads, database_resets, new_class, selenium_errors, mochi, login_failed, pwn_attempts
 
 
 def main():
     os.system("cd ..; mkdir -p reports")
 
-    created_time, info, warning, error, cache_requested, login_success, grade_hit, new_credentials, new_score, tick, radar, notebook, uploads, downloads, illegal_uploads, database_resets, new_class, selenium_errors, mochi = read_logs("../logs.log")
+    created_time, info, warning, error, cache_requested, login_success, grade_hit, new_credentials, new_score, tick, radar, notebook, uploads, downloads, illegal_uploads, database_resets, new_class, selenium_errors, mochi, login_failed, pwn_attempts = read_logs("../logs.log")
 
     wb = Workbook()
     sheet = wb.active
@@ -133,6 +139,10 @@ def main():
     # Errors
     sheet["G1"], sheet["H1"] = "Selenium errors", selenium_errors
     sheet["G1"].fill, sheet["H1"].fill = FC.RED.value, FC.RED.value
+    sheet["G2"], sheet["H2"] = "Login failed", login_failed
+    sheet["G2"].fill, sheet["H2"].fill = FC.RED.value, FC.RED.value
+    sheet["G3"], sheet["H3"] = "Pwn attempts", pwn_attempts
+    sheet["G3"].fill, sheet["H3"].fill = FC.RED.value, FC.RED.value
 
     wb.save(f"../reports/REPORT_{created_time}.xlsx")
 
