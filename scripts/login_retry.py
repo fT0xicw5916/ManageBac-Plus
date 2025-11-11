@@ -42,7 +42,7 @@ def main():
         session.cookies.set("microsoft", '0')
         try:
             session.get("http://managebac.me/load_grades")
-            time.sleep(30)
+            time.sleep(120)
             session.close()
         except Exception:
             pass
@@ -53,7 +53,7 @@ def main():
         session.cookies.set("microsoft", '1')
         try:
             session.get("http://managebac.me/load_grades")
-            time.sleep(30)
+            time.sleep(120)
             session.close()
         except Exception:
             pass
