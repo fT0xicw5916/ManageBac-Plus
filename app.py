@@ -308,19 +308,25 @@ def load_grades():
 
 @app.route("/grades", methods=["POST", "GET"])
 def grades():
+    credentials = Credentials()
+    username = request.cookies.get("username")
+    password = request.cookies.get("password")
+    if password != credentials.search(username)[-1][2]:  # Check if password matches
+        return "Wrong password. Please check your password at <a href='/settings'>/settings</a> and try again."
+
     if request.method == "GET":
-        if len(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]) == 0:  # Login failed
-            app.logger.error(f"Login failed with {request.cookies.get("username")}, {request.cookies.get("password")}, {"MS" if int(request.cookies.get("microsoft")) else "MB"}")
+        if len(json.loads(R.get("GLOB_gpa_data"))[username]) == 0:  # Login failed
+            app.logger.error(f"Login failed with {username}, {password}, {"MS" if int(request.cookies.get("microsoft")) else "MB"}")
             return "Login failed. Please check your email and password at <a href='/settings'>/settings</a> and try again."
 
-        ranks = copy.deepcopy(json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")])
+        ranks = copy.deepcopy(json.loads(R.get("GLOB_gpa_data"))[username])
         for sub in ranks:
             if sub is None:
                 continue
             for i in sub["grades"]:
                 i[1] = None if i[1] is None else perc2rank(i[1])
 
-        g = json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]
+        g = json.loads(R.get("GLOB_gpa_data"))[username]
         if g[-1] is None:  # G10 student
             return render_template("grades.html", grades=g[:-2], ranks=ranks[:-2], enumerate=enumerate)
         return render_template("grades.html", grades=g, ranks=ranks, enumerate=enumerate)
@@ -333,7 +339,7 @@ def grades():
         result = None
         overall = None
         a = None
-        for s in json.loads(R.get("GLOB_gpa_data"))[request.cookies.get("username")]:
+        for s in json.loads(R.get("GLOB_gpa_data"))[username]:
             if s is None:
                 continue
             if s["class_name"] == subject:
