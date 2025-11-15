@@ -7,6 +7,7 @@ from dbm.mochi import Mochi
 from dbm.notebooks import Notebooks
 from functionals.grades import new_task_predict, radar_ranks, perc2rank, radar_percs, radar_ranks_edge, radar_percs_edge
 from functionals.files import allowed_file
+from functionals.aes import decrypt
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 import os
@@ -39,6 +40,8 @@ app.logger.setLevel(logging.DEBUG)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 R = redis.Redis(connection_pool=redis.ConnectionPool(host="localhost", port=6379, db=0))
+
+aes_key = os.environ.get("key")
 
 
 @app.route("/radar")
@@ -274,7 +277,7 @@ def load_grades():
         GLOB_cache_gpa_progress[username] = 0.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
 
-        if password != credentials.search(username)[-1][2]:  # Check if password matches
+        if password != decrypt(aes_key, credentials.search(username)[-1][2]):  # Check if password matches
             return "Wrong password. Please check your password at <a href='/settings'>/settings</a> and try again."
 
         # Load data
@@ -311,7 +314,7 @@ def grades():
     credentials = Credentials()
     username = request.cookies.get("username")
     password = request.cookies.get("password")
-    if password != credentials.search(username)[-1][2]:  # Check if password matches
+    if password != decrypt(aes_key, credentials.search(username)[-1][2]):  # Check if password matches
         return "Wrong password. Please check your password at <a href='/settings'>/settings</a> and try again."
 
     if request.method == "GET":
@@ -390,7 +393,7 @@ def tick():
 
     credentials = Credentials()
     for i in credentials.browse():
-        for _ in cache_grade_data(i[0], i[1], i[2], [], tick=True):
+        for _ in cache_grade_data(i[0], decrypt(aes_key, i[1]), i[2], [], tick=True):
             pass
 
     app.logger.info("Tock")

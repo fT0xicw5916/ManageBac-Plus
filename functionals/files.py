@@ -1,5 +1,6 @@
 ALLOWED_EXTENSIONS = {"mochi", "pdf"}
 
+
 def allowed_file(filename):
     """
     Double-checks whether the file is allowed to be uploaded.

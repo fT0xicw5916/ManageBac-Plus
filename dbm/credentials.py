@@ -1,6 +1,11 @@
 import mysql.connector as C
 import logging
 import os
+import sys
+
+sys.path.insert(0, "..")
+
+from functionals.aes import encrypt
 
 
 class Credentials:
@@ -8,6 +13,7 @@ class Credentials:
         db_username = os.environ.get("db_username")
         db_password = os.environ.get("db_password")
         db_port = os.environ.get("db_port")
+        self.key = os.environ.get("key")
 
         if db_username is None or db_password is None or db_port is None:
             self.con = C.connect(database="credentials", autocommit=True)
@@ -20,7 +26,7 @@ class Credentials:
         s = ""
         for c in classes:
             s += '\"' + c + "\", "
-        command = f"INSERT INTO credentials VALUES (0, \"{email}\", \"{password}\", {microsoft}, {s[:-2]});"
+        command = f"INSERT INTO credentials VALUES (0, \"{email}\", \"{encrypt(self.key, password)}\", {microsoft}, {s[:-2]});"
         self.logger.info(f"New credentials entry created with '{command}'")
         self.cur.execute(command)
 
