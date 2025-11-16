@@ -25,6 +25,7 @@ Just a simple Python Flask webapp built around ManageBac that adds a lot of usef
 - Radar graph generation with respect to multiple subjects
 - Personal projects gallery
 - An online platform for sharing Mochi decks as well as notebooks
+- AES256 encryption for student credentials database
 - Reverse proxy with nginx and deployment level WSGI backend server to parallel process requests
 - ... and much more!
 
@@ -44,6 +45,10 @@ As for Redis, the default configuration should work fine.
 To install the required python libraries, run the following command in your terminal:
 ```shell
 python -m pip install -r requirements.txt
+```
+As MBP uses AES256 encryption for student credentials, you need to set a secret key for data encryption. You can do so by executing the following command in your terminal:
+```shell
+export key="[Your secret key]"
 ```
 ### Launch
 To launch the app, make sure you have all the prerequisites installed, then simply run the following command in your terminal:
@@ -68,7 +73,7 @@ As for `nginx`, you should configure it to reverse proxy requests to `0.0.0.0:80
 
 ## Current limitations
 We're all just high school students and making perfect dynamic websites is obviously not our daily job. Hence I'll have to admit that there are many limitations to the current website:
-- Lack of encryption for personal credentials
+- Lack of encryption for student credentials (SOLVED with AES256)
 - Horrible database schema that minimizes efficiency
 - Tons of hidden bugs not fixed
 - Uses a ton of RAM (not optimized at all)
@@ -83,4 +88,3 @@ Just to name a few. However, we are also actively working on finding solutions t
 - Curving calculator for teachers (Currently unaccepted)
 - Apple Calendar/WeChat notification for approaching DDLs
 - Finish GPA trend graph generation (DIFFICULT)
-- All kinds of encryptions for the credentials database (Hashing?)
