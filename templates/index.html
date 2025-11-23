@@ -26,9 +26,13 @@
 						<div class="content">
 							<div class="inner">
                                 <h1 style="font-size: 100px;">ManageBac <u>Plus</u></h1>
-                                <p>Since ManageBac <b>sucks</b>, we decided to make a new one. A better one.</p>
+								<p class="trigger">Just a simple Python Flask webapp built around ManageBac that adds a lot of useful functions to it.</p>
+                                <div class="expand">
+									<p style="font-size: 10px;">Since ManageBac <b>sucks</b>, we decided to make a new one. A better one.</p>
+								</div>
                                 <strong>This, is ManageBac Plus.</strong>
-                                {% if name is not none %}
+
+								{% if name is not none %}
                                 <br>
                                 <br>
                                 <p><u>Welcome back, <a href="/settings">{{ name }}</a>.</u></p>
