@@ -41,9 +41,9 @@ class ManagebacDriver:
         self.pid = self.driver.service.process.pid
         self.logger = logging.getLogger("app.selen")
 
-        self.classes_xpath = "/html/body/div[1]/div[1]/ul/li[4]/ul/*"
-        self.grades_xpath = "/html/body/div/main/aside/div/section[2]/div/*"
-        self.tasks_xpath = "/html/body/div/main/div[2]/div/section/div/div[3]/*"
+        self.classes_xpath = "/html/body/div[2]/div[1]/ul/li[4]/ul/*"
+        self.grades_xpath = "/html/body/div[2]/main/aside/div/section[2]/div/*"
+        self.tasks_xpath = "/html/body/div[2]/main/div[2]/div/section/div/div[3]/*"
 
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
