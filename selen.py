@@ -42,7 +42,7 @@ class ManagebacDriver:
         self.logger = logging.getLogger("app.selen")
 
         self.classes_xpath = "/html/body/div[2]/div[1]/ul/li[4]/ul/*"
-        self.grades_xpath = "/html/body/div[2]/main/aside/div/section[2]/div/*"
+        self.grades_xpath = "/html/body/div[2]/main/aside/div[2]/div/div[2]/div[1]/section[2]/div/*"
         self.tasks_xpath = "/html/body/div[2]/main/div[2]/div/section/div/div[3]/*"
 
         # Login procedure
