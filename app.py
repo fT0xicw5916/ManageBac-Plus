@@ -393,7 +393,10 @@ def tick():
 
     credentials = Credentials()
     for i in credentials.browse():
-        for _ in cache_grade_data(i[0], decrypt(aes_key, i[1]), i[2], [], tick=True):
+        try:
+            for _ in cache_grade_data(i[0], decrypt(aes_key, i[1]), i[2], [], tick=True):
+                pass
+        except Exception:
             pass
 
     app.logger.info("Tock")
