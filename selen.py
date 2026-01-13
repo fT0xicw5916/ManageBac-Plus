@@ -133,6 +133,7 @@ class ManagebacDriver:
             info_grades = []
             count = 0
             done = False
+            skip = False
             while count < tries and not done:
                 count += 1
 
@@ -141,7 +142,12 @@ class ManagebacDriver:
 
                 for i, div_grade in enumerate(div_grades):
                     if i == 0:
-                        name_with_prop = div_grade.find_element(By.XPATH, "div[1]/strong").get_attribute("innerHTML")  # Overall
+                        try:
+                            name_with_prop = div_grade.find_element(By.XPATH, "div[1]/strong").get_attribute("innerHTML")  # Overall
+                        except NoSuchElementException:  # Cannot find overall
+                            # We just skip this subject
+                            skip = True
+                            break
                     else:
                         name_with_prop = div_grade.find_element(By.XPATH, "div[1]/div").get_attribute("innerHTML")  # Not overall
                     text_grade = div_grade.find_element(By.XPATH, "div[2]").get_attribute("innerHTML")
@@ -151,9 +157,12 @@ class ManagebacDriver:
 
                     info_grades.append([name_with_prop, grade, prop])
 
-                if len(info_grades) > 0:
+                if len(info_grades) > 0 or skip:
                     done = True
                     break
+
+            if skip:
+                continue
 
             if not done:
                 self.logger.warning(f"Failed to retrieve GPA data for {name} ({url}) after {tries} tries")
