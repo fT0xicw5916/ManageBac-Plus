@@ -383,22 +383,21 @@ def root():
 
 
 def tick():
-    app.logger.info("Tick")
+    while True:
+        app.logger.info("Tick")
 
-    cleanup_chrome_processes()
+        os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
 
-    os.system(f"rm -rf {os.path.abspath("static/gen")}/*.png")
-
-    credentials = Credentials()
-    for i in credentials.browse():
-        try:
-            for _ in cache_grade_data(i[0], decrypt(aes_key, i[1]), i[2], [], tick=True):
+        credentials = Credentials()
+        for i in credentials.browse():
+            try:
+                for _ in cache_grade_data(i[0], decrypt(aes_key, i[1]), i[2], [], tick=True):
+                    pass
+            except Exception:
                 pass
-        except Exception:
-            pass
 
-    app.logger.info("Tock")
-    time.sleep(86400)
+        app.logger.info("Tock")
+        time.sleep(86400)
 
 
 def init():
