@@ -382,6 +382,13 @@ def root():
     return render_template("index.html", name=l[0][2:])
 
 
+def fast_tick():
+    while True:
+        cleanup_chrome_processes()
+
+        time.sleep(300)
+
+
 def tick():
     while True:
         app.logger.info("Tick")
@@ -418,8 +425,10 @@ def init():
         Mochi.reset()
         Notebooks.reset()
 
-    t = threading.Thread(target=tick, daemon=True)
-    t.start()
+    t1 = threading.Thread(target=fast_tick, daemon=True)
+    t2 = threading.Thread(target=tick, daemon=True)
+    t1.start()
+    t2.start()
 
 
 if __name__ == "__main__":
