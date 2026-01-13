@@ -71,7 +71,6 @@ def cache_grade_data(username, password, microsoft, dest, tick=False, reload=Fal
     finally:
         if driver:
             driver.terminate()
-            cleanup_chrome_processes()
         yield 1.
 
     if len(dest) == 0:

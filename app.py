@@ -186,7 +186,6 @@ def tasks():
         finally:
             if driver:
                 driver.terminate()
-                cleanup_chrome_processes()
 
         grades_dict = {}
 
@@ -369,7 +368,6 @@ def favicon_ico():
 def handle_exceptions(e):
     app.logger.error(f"Exception caught at {request.path} with {request.method}:\n{e}")
     traceback.print_exc()
-    cleanup_chrome_processes()
 
     return f"Exception caught at {request.path} with {request.method}:\n{e}", 500
 
