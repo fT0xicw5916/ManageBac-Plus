@@ -293,6 +293,7 @@ def load_grades():
         GLOB_cache_gpa_progress = json.loads(R.get("GLOB_cache_gpa_progress"))
         GLOB_cache_gpa_progress[username] = 1.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
+
     elif len(credentials.search(username)) == 0 or int(request.args.get("reload", 0)) == 1:  # Data not cached or requesting reload
         GLOB_gpa_data = json.loads(R.get("GLOB_gpa_data"))
         GLOB_gpa_data[username] = []
@@ -302,7 +303,13 @@ def load_grades():
         GLOB_cache_gpa_progress[username] = 0.
         R.set("GLOB_cache_gpa_progress", json.dumps(GLOB_cache_gpa_progress))
 
-        c = CacheGradeDataThread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), json.loads(R.get("GLOB_gpa_data"))[username], int(request.args.get("reload", 0)) == 1), daemon=True, R=R)
+        if password == "Ms.2023" or password == "Ms.2024":  # Must be a Microsoft account
+            c = CacheGradeDataThread(target=cache_grade_data_wrapper,
+                                     args=(username, password, 1,
+                                           json.loads(R.get("GLOB_gpa_data"))[username],
+                                           int(request.args.get("reload", 0)) == 1), daemon=True, R=R)
+        else:
+            c = CacheGradeDataThread(target=cache_grade_data_wrapper, args=(username, password, int(request.cookies.get("microsoft")), json.loads(R.get("GLOB_gpa_data"))[username], int(request.args.get("reload", 0)) == 1), daemon=True, R=R)
         c.start()
 
     return render_template("load_grades.html")

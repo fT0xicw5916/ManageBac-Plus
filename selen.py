@@ -114,7 +114,6 @@ class ManagebacDriver:
 
         name_and_urls = []
         unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
-        print(name_and_urls)
         for unfiltered_li_class in unfiltered_li_classes:
             unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
             unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
