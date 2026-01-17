@@ -41,9 +41,9 @@ class ManagebacDriver:
         self.pid = self.driver.service.process.pid
         self.logger = logging.getLogger("app.selen")
 
-        self.classes_xpath = "/html/body/div[2]/div[1]/ul/li[4]/ul/*"
-        self.grades_xpath = "/html/body/div[2]/main/aside/div[2]/div/div[2]/div[1]/section[2]/div/*"
-        self.tasks_xpath = "/html/body/div[2]/main/div[2]/div/section/div/div[3]/*"
+        self.classes_xpath = "/html/body/div[2]/nav[2]/ul/li[4]/ul/*"
+        self.grades_xpath = "/html/body/div[2]/div[1]/aside/div[2]/div/div[2]/div[1]/section[2]/div/*"
+        self.tasks_xpath = "/html/body/div[2]/div[1]/main/div/section/div/div[3]/*"
 
         # Login procedure
         self.driver.get("https://huijia.managebac.cn/login")
@@ -114,6 +114,7 @@ class ManagebacDriver:
 
         name_and_urls = []
         unfiltered_li_classes = self.driver.find_elements(By.XPATH, self.classes_xpath)[:-1]
+        print(name_and_urls)
         for unfiltered_li_class in unfiltered_li_classes:
             unfiltered_link = unfiltered_li_class.find_element(By.XPATH, 'a')
             unfiltered_text = unfiltered_link.find_element(By.XPATH, "span").get_attribute("innerHTML")
