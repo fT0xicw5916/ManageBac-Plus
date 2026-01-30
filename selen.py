@@ -177,8 +177,10 @@ class ManagebacDriver:
         if len(dest) == 0:  # Login failed
             return None  # Abort
 
-        if len(dest) < 9:  # For G10 students w/ 7 classes
+        if len(dest) == 7:  # For G10 students w/ 7 classes
             dest.append(None)
+            dest.append(None)
+        elif len(dest) == 8:  # For G11 students with CAS class removed
             dest.append(None)
         return None
 
