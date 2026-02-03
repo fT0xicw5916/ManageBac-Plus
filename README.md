@@ -18,7 +18,7 @@ Just a simple Python Flask webapp built around ManageBac that adds a lot of usef
 <!-- TOC -->
 
 ## Features
-- A convenient way of checking your GPA using pie charts
+- A convenient dashboard for checking your GPAs using dynamic pie charts
 - GPA calculator for mid-terms and finals
 - GPA calculator for marginal tasks (One extra task in a given category)
 - Graphs for all those calculations
