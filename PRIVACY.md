@@ -19,6 +19,7 @@ ManageBac Plus is committed to protecting your privacy. This Privacy Policy expl
 ## Data Storage and Security
 
 - Your credentials and academic data are stored in server databases.
+- Your credentials are encrypted with the AES-256-CFB algorithm before being stored in the server's database.
 - We do not share your personal information with third parties.
 
 ## User Control
@@ -38,4 +39,4 @@ For questions or concerns regarding this Privacy Policy, please contact us at:
 
 ## Last Updated
 
-October 20, 2025
+Feb. 3rd, 2026

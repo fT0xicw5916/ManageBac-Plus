@@ -1,3 +1,7 @@
+"""
+A script that reads the log file and generates an Excel file in report format.
+"""
+
 from openpyxl import Workbook
 import os
 import datetime

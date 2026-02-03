@@ -1,3 +1,8 @@
+"""
+Sometimes users cannot login due to various weird reasons. Run this script to automatically retry login for every
+recorded user from the log file.
+"""
+
 import requests
 import time
 
