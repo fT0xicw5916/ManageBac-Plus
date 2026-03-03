@@ -1,7 +1,6 @@
 from selen import ManagebacDriver
 from dbm.credentials import Credentials
 from dbm.scores import Scores
-from selen import cleanup_chrome_processes
 import logging
 import threading
 import json
