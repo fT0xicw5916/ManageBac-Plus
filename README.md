@@ -50,6 +50,11 @@ As MBP uses AES256 encryption for student credentials, you need to set a secret 
 ```shell
 export key="[Your secret key]"
 ```
+You also need to specify the absolute path of the `Google Chrome` binary file as well as the matching `chromedriver` binary file:
+```shell
+export CHROMEPATH="[Absolute path of the Google Chrome binary file]"
+export CHROMEDRIVERPATH="[Absolute path of the matching chromedriver binary file]"
+```
 ### Launch
 To launch the app, make sure you have all the prerequisites installed, then simply run the following command in your terminal:
 ```shell
