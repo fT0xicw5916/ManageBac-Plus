@@ -2,11 +2,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import time
 import logging
 import psutil
+import os
 
 
 def cleanup_chrome_processes():
@@ -33,7 +33,7 @@ class ManagebacDriver:
         self.class_excludes = ["Homeroom", "Study Hall", "Bedtime", "SDL", "历史", "政治"]
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--incognito")
         chrome_options.add_argument("--no-sandbox")
@@ -41,8 +41,9 @@ class ManagebacDriver:
         chrome_options.page_load_strategy = "eager"
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.binary_location = os.getenv("CHROMEPATH")
 
-        service = Service(ChromeDriverManager().install())
+        service = Service(executable_path=os.getenv("CHROMEDRIVERPATH"))
 
         self.driver = webdriver.Chrome(options=chrome_options, service=service)
         self.pid = self.driver.service.process.pid
