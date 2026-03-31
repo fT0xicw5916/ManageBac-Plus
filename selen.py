@@ -30,7 +30,7 @@ class ManagebacDriver:
     """
 
     def __init__(self, username, password, microsoft=False):
-        self.class_excludes = ["Homeroom", "Study Hall", "Bedtime", "SDL", "历史", "政治"]
+        self.class_excludes = ["Homeroom", "Study Hall", "Bedtime", "SDL", "历史", "政治", "Orchestra", "Physics Studio"]
 
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")
