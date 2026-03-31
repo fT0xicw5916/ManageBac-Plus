@@ -348,6 +348,7 @@ def grades():
         result = None
         overall = None
         a = None
+
         for s in json.loads(R.get("GLOB_gpa_data"))[username]:
             if s is None:
                 continue
